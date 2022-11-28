@@ -1,0 +1,41 @@
+@import 'fonts.scss';
+
+:root {
+  --container-width: 1440px;
+
+  --font-roboto: Roboto, Arial, Helvetica, sans-serif;
+  --font-work: WorkSans, Arial, Helvetica, sans-serif;
+  --font-ubuntu: Ubuntu, Verdana, Geneva, Tahoma, sans-serif;
+
+
+  --color-primary: #116acc;
+  --color-second1: #182233;
+  --color-second2: #b3cee2;
+  --color-second3: #d9dde7;
+  --color-second4: #fd4e5d;
+
+  --color-error: #ba0000;
+  --color-warning: #fbc756;
+  --color-success: #76ca66;
+  --color-info: #a0c3ff;
+
+  --color-black: #000;
+  --color-grey1: #1f2937;
+  --color-grey2: #374151;
+  --color-grey3: #4b5563;
+  --color-grey4: #6b7280;
+  --color-grey5: #9ca3af;
+  --color-grey6: #d1d5db;
+  --color-grey7: #f3f4f6;
+  --color-white: #fff;
+
+  --btn-primary-hover: #4679af;
+  --btn-primary-active: #0c4a8f;
+  --btn-outline-hover-border: #5897db;
+  --btn-outline-hover: #a0c3eb;
+  --btn-outline-active: #cfe1f5;
+
+  --shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
+
+  --header-height: 100px;
+}
