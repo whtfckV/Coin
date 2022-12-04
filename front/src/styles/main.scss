@@ -1,5 +1,36 @@
 @import 'variables.scss';
 
+@mixin animateSkeleton() {
+  & {
+    position: relative;
+    background-color: var(--color-grey7);
+    box-shadow: none;
+    overflow: hidden;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(90deg,
+        rgba(#fff, 0) 0,
+        rgba(#fff, 0.2) 40%,
+        rgba(#fff, 0.5) 60%,
+        rgba(#fff, 0));
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
 html {
   box-sizing: border-box;
 }
@@ -33,8 +64,12 @@ a {
 
 .container {
   margin: 0 auto;
-  padding: 0 50px;
+  padding: 0 10px;
   max-width: var(--container-width);
+
+  @media (min-width: 576px) {
+    padding: 0 50px;
+  }
 }
 
 .main-title {
@@ -360,6 +395,7 @@ a {
 .accounts-top {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   margin-bottom: 50px;
   column-gap: 35px;
 
@@ -369,30 +405,60 @@ a {
 }
 
 .card-list {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 50px 70px;
 
-  &__item {
-    width: 29.8%;
+  @media (min-width: 576px) {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   }
 }
 
 .card {
+  $lhAmount: 22px;
+  $lhBalance: 20px;
+  $lhTrans: 15px;
+  $gap: 9px;
+  $pad: 22px;
   display: flex;
   flex-direction: column;
-  row-gap: 9px;
+  row-gap: $gap;
   justify-content: space-between;
   border-radius: 9px;
-  padding: 22px;
+  padding: $pad;
   min-height: 156px;
   background-color: var(--color-white);
   box-shadow: var(--shadow);
+
+  &.skeleton {
+    background-repeat: no-repeat;
+    background-image:
+      linear-gradient(var(--color-grey5) $lhAmount, transparent 0),
+      linear-gradient(var(--color-grey5) $lhBalance, transparent 0),
+      linear-gradient(var(--color-grey5) $lhTrans, transparent 0),
+      linear-gradient(var(--color-grey5) $lhTrans, transparent 0),
+      linear-gradient(var(--color-grey5) 48px, transparent 0);
+    background-size:
+      270px $lhAmount,
+      90px $lhBalance,
+      151px $lhTrans,
+      98px $lhTrans,
+      111px 48px;
+    background-position:
+      $pad $pad,
+      $pad calc($pad + $lhAmount + $gap),
+      $pad calc(100% - $pad - $lhTrans - 2px),
+      $pad calc(100% - $pad),
+      calc(100% - $pad) calc(100% - $pad);
+
+    @include animateSkeleton();
+  }
 
   &__amount {
     font-family: var(--font-roboto);
     font-weight: 500;
     font-size: 18px;
+    line-height: $lhAmount;
   }
 
   &__content {
@@ -403,8 +469,8 @@ a {
 
   &__balance {
     display: inline-block;
-    margin-bottom: 31px;
     font-size: 14px;
+    line-height: $lhBalance;
   }
 
   &__last-transaction {
@@ -414,18 +480,193 @@ a {
       display: block;
       font-weight: 700;
       font-size: 13px;
-      line-height: 15px;
+      line-height: $lhTrans;
     }
 
     &-date {
       font-weight: 400;
       font-size: 13px;
-      line-height: 15px;
+      line-height: $lhTrans;
     }
   }
 
   &__btn {
     padding-left: 21.5px;
     padding-right: 21.5px;
+  }
+}
+
+.currency {
+  display: flex;
+  line-height: 1;
+
+  &:not(:last-child) {
+    margin-bottom: 25px;
+  }
+
+  &__name {
+    display: flex;
+    width: 100%;
+    font-weight: 600;
+
+    &::after {
+      content: '';
+      display: block;
+      flex-grow: 1;
+      margin: 0 10px;
+      margin-bottom: 4px;
+      border-bottom: 1px dashed black;
+    }
+  }
+}
+
+.currencies {
+  $pad: 50px;
+  display: grid;
+  grid-template-columns: 45fr 55fr;
+  gap: 44px 49px;
+  font-family: var(--font-work);
+  font-size: 20px;
+  color: var(--color-black);
+
+  &__title {
+    margin-bottom: 25px;
+    font-weight: 700;
+    font-size: inherit;
+  }
+
+  &__block {
+    border-radius: 50px;
+    padding: $pad;
+    background-color: var(--color-white);
+    box-shadow: var(--shadow);
+
+
+    &_grey {
+      background-color: #e5e5e5;
+      box-shadow: none;
+    }
+  }
+
+  &__strim {
+    grid-row: span 2;
+  }
+
+  .your {
+
+    &.skeleton {
+      $height: 23px;
+      $gap: 25px;
+      $width: calc(100% - $pad * 2);
+      $offset: $height + $gap;
+      height: 411px;
+      @include animateSkeleton();
+
+      background-repeat: no-repeat;
+      background-image:
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0);
+      background-size:
+        165px $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height;
+      background-position:
+        $pad $pad,
+        $pad calc($pad + $offset * 1),
+        $pad calc($pad + $offset * 2),
+        $pad calc($pad + $offset * 3),
+        $pad calc($pad + $offset * 4),
+        $pad calc($pad + $offset * 5),
+        $pad calc($pad + $offset * 6);
+    }
+  }
+}
+
+
+.exchange {
+  &__field {
+    padding: 0;
+    border: none;
+  }
+
+  &__group {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: 8fr 2fr;
+    gap: 25px;
+    font-family: var(--font-ubuntu);
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  &__selects {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    gap: 20px;
+
+    &_from,
+    &_to {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+      gap: inherit;
+    }
+  }
+
+  .amount {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__select {
+    flex-grow: 1;
+    border-radius: 7px;
+    border: 1px solid var(--color-grey5);
+    padding: 10px 15px;
+  }
+
+  &__submit {
+    grid-row: span 2;
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  &.skeleton {
+    $height: 44px;
+    $gap: 25px;
+    $pad: 50px;
+    $lh: 23px;
+    height: 256px;
+    @include animateSkeleton();
+
+    background-repeat: no-repeat;
+    background-image:
+      linear-gradient(var(--color-grey5) $lh, transparent 0),
+      linear-gradient(var(--color-grey5) $height, transparent 0),
+      linear-gradient(var(--color-grey5) $height, transparent 0),
+      linear-gradient(var(--color-grey5) calc(100%), transparent 0);
+    background-size:
+      165px $lh,
+      calc(78% - $pad * 2 - $gap) $height,
+      calc(78% - $pad * 2 - $gap) $height,
+      104px calc(100% - ($pad * 2 + $lh + $gap));
+    background-position:
+      $pad $pad,
+      $pad calc($pad + $lh + $gap),
+      $pad calc(100% - $pad),
+      calc(100% - $pad) calc(100% - $pad);
   }
 }

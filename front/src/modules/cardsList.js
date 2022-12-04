@@ -1,17 +1,17 @@
 import { setChildren, el } from 'redom';
 import createCard from './card';
-import getData from './getData';
+import WorkApi from './WorkApi';
 
 export default class CardList {
   constructor(container) {
     this.container = container;
-    this.url = 'http://localhost:3000/accounts';
     this.load = true;
-    this.sortProp = localStorage.getItem('sorting') || null;
+    this.sortProp;
   }
 
   set sortProp(prop) {
     this._prop = prop;
+
     if (this._prop) {
       localStorage.setItem('sorting', this._prop);
 
@@ -40,7 +40,17 @@ export default class CardList {
     this._load = bool;
 
     this._load ?
-      setChildren(this.container, el('p', 'loading...')) :
+      setChildren(this.container, [
+        el('div.card.skeleton'),
+        el('div.card.skeleton'),
+        el('div.card.skeleton'),
+        el('div.card.skeleton'),
+        el('div.card.skeleton'),
+        el('div.card.skeleton'),
+        el('div.card.skeleton'),
+        el('div.card.skeleton'),
+        el('div.card.skeleton'),
+      ]) :
       setChildren(this.container, []);
   }
 
@@ -51,7 +61,13 @@ export default class CardList {
   async fetch() {
     this.load = true;
     try {
-      this.cards = await getData(this.url);
+      const { payload, error } = await WorkApi.getAccounts();
+
+      if (error) {
+        throw new Error(error)
+      } else {
+        this.cards = payload;
+      }
     } catch (error) {
       throw new Error(error);
     } finally {
@@ -61,6 +77,9 @@ export default class CardList {
 
   render() {
     setChildren(this.container, this.cards.map(card => createCard(card)));
+    this.container.dispatchEvent(new Event('cardsLoaded', {
+      bubbles: true
+    }));
   }
 
   sort() {

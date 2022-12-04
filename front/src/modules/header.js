@@ -1,4 +1,4 @@
-import { el, mount } from "redom";
+import { el, mount, unmount } from "redom";
 import createNav from "./nav";
 
 export class Header {
@@ -14,16 +14,21 @@ export class Header {
     );
   }
 
-  update(path) {
+  update(path = '/') {
+
+    if (path === '/') unmount(this.header.children[0], this.nav);
+
     this.nav.querySelectorAll('a').forEach(link => {
       link.classList.remove('active');
 
-      if (link.getAttribute('href') === path) {
+      if (link.getAttribute('href').slice(1) === path) {
         link.classList.add('active');
       };
     })
 
-    mount(this.header.children[0], this.nav)
+    if (!this.header.children[0].contains(this.nav) && path !== '/') {
+      mount(this.header.children[0], this.nav);
+    }
   }
 }
 

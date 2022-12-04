@@ -1,4 +1,4 @@
-import { el, html } from "redom";
+import { el } from "redom";
 
 const months = [
   'января',
@@ -31,12 +31,12 @@ export default function createCard({ account, balance, transactions }) {
   */
   return el('li.card.card-list__item', [
     el('span.card__amount', account),
+    el('span.card__balance', `${balance} ₽`),
     el('div.card__content', [
       el('div.card__content_left', [
-        html('span.card__balance', `${balance} ₽`),
         el('div.card__last-transaction', [
           el('span.card__last-transaction-descr', 'Последняя транзакция:'),
-          el('span.card__last-transaction-date', transactions.map(({date}) => {
+          el('span.card__last-transaction-date', transactions.map(({ date }) => {
             date = new Date(date);
             return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
           }))
@@ -44,8 +44,16 @@ export default function createCard({ account, balance, transactions }) {
       ]),
       // поправить падинги по x
       el('a.btn.btn-l.btn-primary.card__btn', {
-        href: `account/${account}`,
-        'data-navigo': ''
+        href: `/account/${account}`,
+        // пока что не работает 😅
+        'data-navigo': 'true'
+        // onclick(e) {
+        //   e.preventDefault();
+        //   // console.log(new Event('navigate'))
+        //   this.dispatchEvent(new Event('navigate', {
+        //     bubbles: true
+        //   }));
+        // }
       }, 'Открыть'),
     ]),
   ])
