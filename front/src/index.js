@@ -12,6 +12,9 @@ import Currencies from './modules/Currencies';
 import WorkApi from './modules/WorkApi';
 import Exchange from './modules/Exchange';
 import Strim from './modules/Strim';
+import AccountTop from './modules/AccountTop';
+import NewTransfer from './modules/newTransfer';
+import BarChart from './modules/BarChart';
 
 const router = new Navigo('/');
 const PATH = {
@@ -21,6 +24,9 @@ const PATH = {
   CURRENCIES: '/currencies',
   CREATE: '/create-account',
 };
+
+if (!localStorage.getItem('accounts'))
+  localStorage.setItem('accounts', JSON.stringify([]));
 
 if (!localStorage.getItem('token'))
   router.navigate('/');
@@ -33,6 +39,8 @@ const form = createLoginForm();
 const ul = el('ul.list-reset.card-list');
 const cards = new CardList(ul);
 const content = el('div.content');
+const strim = new Strim();
+
 
 top.select.select.addEventListener('change', () => {
   cards.sortProp = top.select.value;
@@ -77,33 +85,103 @@ router.on('/', () => {
   header.update();
   main.classList.add('fix');
   setChildren(main, form);
-});
+}).resolve();
 
 router.on(PATH.ACCOUNTS, ({ url }) => {
   main.classList.remove('fix');
-  setChildren(main, container);
-  setChildren(content, ul);
   header.update(url);
   top.update(url);
+
+  setChildren(main, container);
+  setChildren(content, ul);
+
   cards.fetch().then(() => {
     cards.sortProp = localStorage.getItem('sorting');
     router.updatePageLinks();
   })
-})
+}).resolve()
 
 router.on(`${PATH.ACCOUNT}/:id`, ({ data: { id }, url }) => {
   header.update(url);
   top.update(url);
-  setChildren(content, [])
-})
+
+  const [
+    accountTopContainer,
+    newTransferContainer,
+    balanceDynamicsContainer,
+    transferHistoryContainer,
+  ] = [
+      el('div.account__top.skeleton'),
+      el('div.account__item.account__item_grey.skeleton'),
+      el('div.account__item.account__item_white.skeleton'),
+      el('div.account__item.account__item_grey.skeleton'),
+    ];
+  setChildren(content, [
+    accountTopContainer,
+    newTransferContainer,
+    balanceDynamicsContainer,
+    transferHistoryContainer,
+  ]);
+
+
+  WorkApi.getAccount(id).then(({ payload: { account, balance, transactions }, error }) => {
+    if (error) {
+      throw new Error(error);
+    };
+
+    // console.table(account, balance, transactions);
+
+    const accountTop = new AccountTop(accountTopContainer, account, balance);
+    accountTop.render();
+
+    const newTransfer = new NewTransfer(newTransferContainer, account);
+    newTransfer.render();
+
+    const barChart = new BarChart(balanceDynamicsContainer, transactions, account, balance);
+    barChart.render();
+
+    newTransfer.form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const recipientInp = this.elements['recipient'];
+      const amountInp = this.elements['transferAmount'];
+      const recipient = recipientInp.value;
+      const amount = amountInp.value;
+
+      if (!!amount.trim() && !!recipient.trim()) {
+        WorkApi.transferFunds(account, recipient, amount)
+          .then(({ payload: { balance }, error }) => {
+            if (error) throw new Error(error);
+
+            const accounts = JSON.parse(localStorage.getItem('accounts'));
+            if (!accounts.includes(recipient)) accounts.push(recipient);
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+
+            accountTop.balance = balance;
+            recipientInp.value = '';
+            amountInp.value = '';
+
+            NewTransfer.updateOldAccounts();
+          })
+          .catch(error => console.log(error));
+      } else {
+        console.log('error, empty');
+      }
+
+    })
+  }).catch(error => {
+    console.log(error);
+  });
+}).resolve();
 
 router.on(PATH.CURRENCIES, ({ url }) => {
   header.update(url);
   top.update(url);
+
   const [
     yourCurrencies,
     currenciesStrim,
-    currenciesExhange] = [
+    currenciesExhange
+  ] = [
       el('div.currencies__block.currencies__your.your'),
       el('div.currencies__block.currencies__block_grey.currencies__strim'),
       el('div.currencies__block.currencies__exchange.exchange'),
@@ -115,23 +193,26 @@ router.on(PATH.CURRENCIES, ({ url }) => {
   ]);
   const currencies = new Currencies(yourCurrencies);
   const exchange = new Exchange(currenciesExhange);
-  const strim = new Strim(currenciesStrim);
 
-  // strim.connect();
+  setChildren(currenciesStrim, strim.render());
+  strim.connect();
 
   content.addEventListener('exchange', ({ detail }) => {
     currencies.data = detail;
   })
 
   setChildren(content, contentCurrencies);
-})
+}, {
+  leave(done, match) {
+    strim.close();
+    done();
+  }
+}).resolve()
 
 router.on(PATH.BANKS, ({ url }) => {
   setChildren(content, el('p', 'банки'));
   header.update(url)
   top.update(url);
-})
-
-router.resolve();
+}).resolve();
 
 

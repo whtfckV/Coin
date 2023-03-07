@@ -95,25 +95,33 @@ export default class TopMenu {
 
   update(path = '/') {
     unmount(this.element, this.select.container);
+    this.element.classList.remove('mb-30');
 
-    switch (path) {
-      case 'accounts':
-        this.name = 'Ваши счета';
-        this.icon = 'create';
-        mount(this.element, this.select.container);
-        mount(this.element, this.btn);
-        break;
-      case 'banks':
-        this.name = 'Карта банкоматов';
-        unmount(this.element, this.btn);
-        break;
-      case 'currencies':
-        this.name = 'Валютный обмен';
-        unmount(this.element, this.btn);
-        break;
-      default:
-        this.icon = 'back';
-        break;
+    if (isNaN(Number(path.split('/').slice(-1)))) {
+      switch (path) {
+        case 'accounts':
+          this.name = 'Ваши счета';
+          this.icon = 'create';
+          mount(this.element, this.select.container);
+          mount(this.element, this.btn);
+          break;
+        case 'banks':
+          this.name = 'Карта банкоматов';
+          unmount(this.element, this.btn);
+          break;
+        case 'currencies':
+          this.name = 'Валютный обмен';
+          unmount(this.element, this.btn);
+          break;
+        default:
+          this.icon = 'back';
+          break;
+      }
+    } else {
+      this.name = 'Просмотр счёта';
+      this.icon = 'back';
+      this.element.classList.add('mb-30');
     }
+
   }
 }

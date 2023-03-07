@@ -98,7 +98,7 @@ export default class Exchange {
               step: 0.01,
               oninput(e) {
                 if (e.inputType === 'insertFromPaste')
-                  e.target.value = e.target.value.replace(/\-/, '');
+                  this.value = this.value.replace(/[^0-9\.]/, '');
               },
               onkeypress(e) {
                 if (e.key === '-') e.preventDefault()

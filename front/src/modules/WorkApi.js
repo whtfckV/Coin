@@ -1,5 +1,5 @@
 export default class WorkApi {
-  constructor() {}
+  constructor() { }
   static async autorization(login, password) {
     const response = await fetch('http://localhost:3000/login', {
       method: 'POST',
@@ -77,7 +77,7 @@ export default class WorkApi {
     );
   }
 
-  static async exchangeCurrency(from, to, amount, ) {
+  static async exchangeCurrency(from, to, amount) {
     return await fetch('http://localhost:3000/currency-buy', {
       method: 'POST',
       body: JSON.stringify({

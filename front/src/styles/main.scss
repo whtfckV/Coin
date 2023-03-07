@@ -399,6 +399,10 @@ a {
   margin-bottom: 50px;
   column-gap: 35px;
 
+  &.mb-30 {
+    margin-bottom: 30px;
+  }
+
   &__btn {
     margin-left: auto;
   }
@@ -518,7 +522,62 @@ a {
       border-bottom: 1px dashed black;
     }
   }
+
+  &__list {
+    max-height: 920px;
+    overflow-y: auto;
+  }
+
+  &.strim {
+    align-items: center;
+
+
+    &::after {
+      content: '';
+      margin-left: 15px;
+      border-style: solid;
+      width: 0;
+      height: 0;
+    }
+
+    &.up {
+      &::after {
+        border-width: 0 10px 10px 10px;
+        border-color: transparent transparent var(--color-success) transparent;
+      }
+
+      .currency__name {
+        &::after {
+          border-color: var(--color-success);
+        }
+      }
+    }
+
+    &.no-change {
+      .currency__name {
+        &::after {
+          border-color: black;
+        }
+      }
+
+    }
+
+    &.down {
+      &::after {
+        border-width: 10px 10px 0 10px;
+        border-color: var(--color-second4) transparent transparent transparent;
+      }
+
+      .currency__name {
+        &::after {
+          border-color: var(--color-second4);
+        }
+      }
+
+    }
+  }
 }
+
 
 .currencies {
   $pad: 50px;
@@ -558,7 +617,7 @@ a {
       $height: 23px;
       $gap: 25px;
       $width: calc(100% - $pad * 2);
-      $offset: $height + $gap;
+      $offset: calc($height + $gap);
       height: 411px;
       @include animateSkeleton();
 
