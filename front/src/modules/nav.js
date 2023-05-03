@@ -1,25 +1,44 @@
-import { el } from 'redom';
+import { el, mount, setAttr, setChildren, unmount } from 'redom';
+import router from '../router/router';
 
-export default function createNav() {
-  return el('div.header__buttons', [
-    el('a.btn.btn-l.btn-outline', {
-      href: '/banks',
-      'data-navigo': ''
-    }, 'Банкоматы'),
-    el('a.btn.btn-l.btn-outline.active', {
-      href: '/accounts',
-      'data-navigo': ''
-    }, 'Счета'),
-    el('a.btn.btn-l.btn-outline', {
-      href: '/currencies',
-      'data-navigo': ''
-    }, 'Валюта'),
-    el('a.btn.btn-l.btn-outline', {
-      href: '/',
-      'data-navigo': '',
-      onclick() {
-        localStorage.removeItem('token');
-      }
-    }, 'Выйти'),
-  ]);
-}
+const hrefs = [
+  ['/banks', 'Банкоматы'],
+  ['/accounts', 'Счета'],
+  ['/currencies', 'Валюта'],
+  ['', 'Выйти']
+];
+
+const createLink = ([href, name]) =>
+  <a class='btn btn-l btn-outline' href={href} data-navigo='' onclick={href ? () => { } : () => {
+    localStorage.removeItem('token');
+    router.navigate('/');
+  }}>{name}</a>;
+
+export default class Nav {
+  constructor() {
+    this.links = hrefs.map(createLink);
+    <nav this='el' class='header__nav'>
+      {this.links}
+    </nav>
+  };
+
+  update(url) {
+    this.path = url;
+    if (!this.path) {
+      setChildren(this.el, '');
+    } else {
+      setChildren(this.el, this.links);
+    };
+    this.links.forEach(link => {
+      setAttr(link, {
+        ariaCurrent: false,
+      });
+
+      if (link.getAttribute('href').slice(1) === this.path && this.path !== '') {
+        setAttr(link, {
+          ariaCurrent: 'page',
+        })
+      };
+    })
+  }
+};

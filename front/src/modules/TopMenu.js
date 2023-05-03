@@ -1,30 +1,11 @@
-import { el, mount, setChildren, svg, unmount } from 'redom';
+import { el, mount, setChildren, unmount } from 'redom';
 import customSelect from 'custom-select';
 import WorkApi from './WorkApi';
+import { container } from '..';
+import router from '../router/router';
+import { topMenuiIcons } from '../scripts/Icons';
+import { cards } from '../router/routes/accounts';
 
-const icons = {
-  create: svg('svg', {
-    width: 16,
-    height: 16,
-    viewBox: '0 0 16 16',
-    fill: 'none',
-    xmlns: 'http://www.w3.org/2000/svg'
-  }, svg('path', {
-    d: 'M7.99999 7.69167e-06L8 8.00001M8 8.00001L8.00001 16M8 8.00001L16 8.00001M8 8.00001L0 8',
-    stroke: 'white',
-    'stroke-width': 2
-  })),
-  back: svg('svg', {
-    width: 16,
-    height: 12,
-    viewBox: '0 0 16 12',
-    fill: 'none',
-    xmlns: 'http://www.w3.org/2000/svg'
-  }, svg('path', {
-    d: 'M3.83 5L7.41 1.41L6 0L0 6L6 12L7.41 10.59L3.83 7L16 7V5L3.83 5Z',
-    fill: 'white',
-  }))
-}
 
 const select = el('select#sort', [
   el('option', { value: 'placeholder' }, 'Сортировка'),
@@ -32,14 +13,13 @@ const select = el('select#sort', [
   el('option', { value: 'balance' }, 'По балансу'),
   el('option', { value: 'date' }, 'По последней транзакции'),
 ])
-// <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-//   <path d="M3.83 5L7.41 1.41L6 0L0 6L6 12L7.41 10.59L3.83 7L16 7V5L3.83 5Z" fill="white"/>
-// </svg>
 
-function create(e) {
-  e.target.dispatchEvent(new Event('create', {
-    bubbles: true
-  }));
+function create() {
+  WorkApi.createAccount()
+  cards.fetch().then(() => {
+    cards.render();
+    router.updatePageLinks();
+  })
 };
 
 function back() {
@@ -47,81 +27,77 @@ function back() {
 };
 
 export default class TopMenu {
-  constructor() {
-    this.name;
-    this.title = el('h1.main-title', this.name);
-    this.icon;
-    this.btn = el('button.btn.btn-l.btn-primary.btn-icon-text.accounts-top__btn', this.icon, this.btnName);
-    this.element = el('div.accounts-top', [
-      this.title,
-      select,
-      this.btn
-    ]);
-    this.select = customSelect(select)[0];
-    this.select.value = localStorage.getItem('sorting') ?? '';
-  }
+  static title = el('h1.main-title', 'Ваши счета');
+  static icon = topMenuiIcons.create;
+  static btnName = el('span', 'Создать новый счёт')
+  static btn = el('button.btn.btn-l.btn-primary.btn-icon-text.accounts-top__btn', [this.icon, this.btnName]);
+  static element = el('div.accounts-top', [
+    this.title,
+    select,
+    this.btn
+  ]);
+  static select = customSelect(select)[0];
+  constructor() { };
 
-  set name(string) {
-    this._name = string;
-    this.title.textContent = string;
-  }
-  get name() {
-    return this._name
-  }
+  static mount() {
+    this.select.value = localStorage.getItem('sorting') || '';
 
-  set icon(iconName) {
-    this._icon = iconName;
+    this.select.select.addEventListener('change', () => {
+      cards.sortProp = this.select.value;
+    });
 
-    if (iconName === 'create') {
-      setChildren(this.btn, [
-        icons[iconName],
-        el('span', 'Создать новый счёт')
-      ]);
+    this.btn.addEventListener('click', create);
+    setChildren(container, this.element);
+  };
 
-      this.btn.removeEventListener('click', back);
-      this.btn.addEventListener('click', create);
-    } else {
-      setChildren(this.btn, [
-        icons[iconName],
-        el('span', 'Вернуться назад')
-      ]);
-      this.btn.removeEventListener('click', create);
-      this.btn.addEventListener('click', back);
+  static changeIcon(name) {
+    this.btn.removeEventListener('click', create);
+    this.btn.removeEventListener('click', back);
+    switch (name) {
+      case 'create':
+        this.btnName.textContent = 'Создать новый счёт';
+        this.btn.addEventListener('click', create);
+        break;
+      case 'back':
+        this.btnName.textContent = 'Вернуться назад';
+        this.btn.addEventListener('click', back);
+        mount(this.btn, topMenuiIcons[name], this.icon, true);
+        break;
     }
-  }
-  get icon() {
-    return this._icon
+    setChildren(this.btn, [
+      topMenuiIcons[name],
+      this.btnName
+    ])
   }
 
-  update(path = '/') {
-    unmount(this.element, this.select.container);
+  static update(path) {
+    path !== 'accounts' && unmount(this.element, this.select.container);
     this.element.classList.remove('mb-30');
 
     if (isNaN(Number(path.split('/').slice(-1)))) {
       switch (path) {
         case 'accounts':
-          this.name = 'Ваши счета';
-          this.icon = 'create';
+          this.title.textContent = 'Ваши счета';
+          this.changeIcon('create');
           mount(this.element, this.select.container);
           mount(this.element, this.btn);
           break;
         case 'banks':
-          this.name = 'Карта банкоматов';
+          this.title.textContent = 'Карта банкоматов';
           unmount(this.element, this.btn);
           break;
         case 'currencies':
-          this.name = 'Валютный обмен';
+          this.title.textContent = 'Валютный обмен';
           unmount(this.element, this.btn);
           break;
         default:
-          this.icon = 'back';
+          this.changeIcon('back');
           break;
       }
     } else {
-      this.name = 'Просмотр счёта';
-      this.icon = 'back';
+      this.title.textContent = 'Просмотр счёта';
+      this.changeIcon('back');
       this.element.classList.add('mb-30');
-    }
-
-  }
-}
+    };
+  };
+};

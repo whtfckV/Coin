@@ -1,5 +1,5 @@
 import WorkApi from "./WorkApi";
-import { setChildren, el, mount } from "redom";
+import { el, mount } from "redom";
 
 export default class Strim {
   constructor() {

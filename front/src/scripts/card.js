@@ -42,18 +42,9 @@ export default function createCard({ account, balance, transactions }) {
           }))
         ]),
       ]),
-      // поправить падинги по x
       el('a.btn.btn-l.btn-primary.card__btn', {
         href: `/account/${account}`,
-        // пока что не работает 😅
-        'data-navigo': 'true'
-        // onclick(e) {
-        //   e.preventDefault();
-        //   // console.log(new Event('navigate'))
-        //   this.dispatchEvent(new Event('navigate', {
-        //     bubbles: true
-        //   }));
-        // }
+        'data-navigo': ''
       }, 'Открыть'),
     ]),
   ])

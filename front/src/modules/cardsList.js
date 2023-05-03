@@ -1,12 +1,17 @@
 import { setChildren, el } from 'redom';
-import createCard from './card';
+import { content } from '..';
+import createCard from '../scripts/card';
 import WorkApi from './WorkApi';
+import router from '../router/router';
 
 export default class CardList {
-  constructor(container) {
-    this.container = container;
-    this.load = true;
-    this.sortProp;
+  constructor() {
+    <ul this='el' class='list-reset card-list'></ul>
+    this.load;
+    this.fetch().then(() => {
+      this.sortProp = localStorage.getItem('sorting');
+      router.updatePageLinks();
+    });
   }
 
   set sortProp(prop) {
@@ -22,12 +27,12 @@ export default class CardList {
           .then(() => {
             this.sort()
           })
-          .catch(error => setChildren(this.container, el('p', error.message)));
+          .catch(error => setChildren(this.el, el('p', error.message)));
       }
     } else {
       this.fetch()
         .then(() => this.render())
-        .catch(error => setChildren(this.container, el('p', error.message)));
+        .catch(error => setChildren(this.el, el('p', error.message)));
     }
   };
 
@@ -40,7 +45,7 @@ export default class CardList {
     this._load = bool;
 
     this._load ?
-      setChildren(this.container, [
+      setChildren(this.el, [
         el('div.card.skeleton'),
         el('div.card.skeleton'),
         el('div.card.skeleton'),
@@ -51,12 +56,12 @@ export default class CardList {
         el('div.card.skeleton'),
         el('div.card.skeleton'),
       ]) :
-      setChildren(this.container, []);
-  }
+      setChildren(this.el, []);
+  };
 
   get load() {
     return this._load;
-  }
+  };
 
   async fetch() {
     this.load = true;
@@ -64,23 +69,19 @@ export default class CardList {
       const { payload, error } = await WorkApi.getAccounts();
 
       if (error) {
-        throw new Error(error)
-      } else {
-        this.cards = payload;
-      }
+        throw new Error(error);
+      };
+      this.cards = payload;
     } catch (error) {
       throw new Error(error);
     } finally {
       this.load = false;
-    }
-  }
+    };
+  };
 
   render() {
-    setChildren(this.container, this.cards.map(card => createCard(card)));
-    this.container.dispatchEvent(new Event('cardsLoaded', {
-      bubbles: true
-    }));
-  }
+    setChildren(this.el, this.cards.map(card => createCard(card)));
+  };
 
   sort() {
     this.cards.sort((cardA, cardB) => {
@@ -90,11 +91,11 @@ export default class CardList {
       } else {
         if (cardA['transactions'].length && cardB['transactions'].length ?
           cardA['transactions'][0][this.sortProp] < cardB['transactions'][0][this.sortProp] :
-          cardA['transactions'].length < cardB['transactions'].length)
-          return -1;
-      }
+          cardA['transactions'].length < cardB['transactions'].length);
+        return -1;
+      };
     });
 
     this.render();
-  }
+  };
 };

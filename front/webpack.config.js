@@ -14,7 +14,7 @@ module.exports = env => ({
       template: './index.html',
     }),
     new MiniCssExtractPlugin({
-      filename: 'main.[contenthash].css',
+      filename: 'main.[contenthash].min.css',
     }),
   ],
   module: {
@@ -24,9 +24,6 @@ module.exports = env => ({
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env',],
-          },
         },
       },
       {

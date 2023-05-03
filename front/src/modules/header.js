@@ -1,34 +1,35 @@
-import { el, mount, unmount } from "redom";
-import createNav from "./nav";
+import { el, unmount, mount } from "redom";
+import Logo from "./Logo";
+import Nav from "./Nav";
 
-export class Header {
+export const nav = <Nav />;
+
+export default class Header {
   constructor() {
-    this.logo = 'Coin.';
-    this.nav = createNav();
-    this.header = el('header.header',
-      el('div.container.header__container', [
-        el('span.header__logo',
-          this.logo
-        ),
-      ])
-    );
-  }
+    <header this='el' class='header'>
+      <div this='container' class='container header__container'>
+        <Logo />
+        {nav}
+        {/* <Nav this='nav' /> */}
+      </div>
+    </header>
+  };
 
-  update(path = '/') {
 
-    if (path === '/') unmount(this.header.children[0], this.nav);
+  // update() {
+  //   this.path = router.getCurrentLocation().url;
+  //   if (!this.path) {
+  //     unmount(this.container, this.nav);
+  //     return;
+  //   };
 
-    this.nav.querySelectorAll('a').forEach(link => {
-      link.classList.remove('active');
+  //   if (this.nav) {
+  //     if (!this.container.contains(this.nav) && this.path !== '/') {
+  //       mount(this.container, this.nav);
+  //     };
+  //   };
+  //   this.nav.update();
 
-      if (link.getAttribute('href').slice(1) === path) {
-        link.classList.add('active');
-      };
-    })
-
-    if (!this.header.children[0].contains(this.nav) && path !== '/') {
-      mount(this.header.children[0], this.nav);
-    }
-  }
-}
-
+  //   router.updatePageLinks();
+  // };
+};
