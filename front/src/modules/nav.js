@@ -1,4 +1,4 @@
-import { el, mount, setAttr, setChildren, unmount } from 'redom';
+import { el, setAttr, setChildren } from 'redom';
 import router from '../router/router';
 
 const hrefs = [

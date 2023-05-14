@@ -7,50 +7,68 @@ import { topMenuiIcons } from '../scripts/Icons';
 import { cards } from '../router/routes/accounts';
 
 
-const select = el('select#sort', [
-  el('option', { value: 'placeholder' }, 'Сортировка'),
-  el('option', { value: 'account' }, 'По номеру'),
-  el('option', { value: 'balance' }, 'По балансу'),
-  el('option', { value: 'date' }, 'По последней транзакции'),
-])
+const options = [
+  ['placeholder', 'Сортировка'],
+  ['account', 'По номеру'],
+  ['balance', 'По балансу'],
+  ['date', 'По последней транзакции'],
+];
 
-function create() {
-  WorkApi.createAccount()
-  cards.fetch().then(() => {
-    cards.render();
-    router.updatePageLinks();
-  })
-};
+// function create() {
+//   WorkApi.createAccount()
+//   cards.fetch().then(() => {
+//     cards.render();
+//     router.updatePageLinks();
+//   })
+// };
 
-function back() {
-  history.back();
-};
+// function back() {
+//   history.back();
+// };
 
+
+/*
+      ПРОБЛЕМА СОЗДАНИЯ КАСТОМНОГО СЕЛЕКТА
+*/
 export default class TopMenu {
-  static title = el('h1.main-title', 'Ваши счета');
-  static icon = topMenuiIcons.create;
-  static btnName = el('span', 'Создать новый счёт')
-  static btn = el('button.btn.btn-l.btn-primary.btn-icon-text.accounts-top__btn', [this.icon, this.btnName]);
-  static element = el('div.accounts-top', [
-    this.title,
-    select,
-    this.btn
-  ]);
-  static select = customSelect(select)[0];
-  constructor() { };
-
-  static mount() {
-    this.select.value = localStorage.getItem('sorting') || '';
-
-    this.select.select.addEventListener('change', () => {
-      cards.sortProp = this.select.value;
-    });
-
-    this.btn.addEventListener('click', create);
-    setChildren(container, this.element);
+  constructor() {
+    this.mySelect = <select id='sort'>
+      {options.map(([value, name]) => <option value={value}>{name}</option>)}
+    </select>
+    console.log(this.mySelect)
+    debugger;
+    this.select = customSelect(this.mySelect)[0];
+    // this.select = <select id='sort'>
+    //   {options.map(([value, name]) => <option value={value}>{name}</option>)}
+    // </select>;
+    // console.log(this.customSelect);
+    <div this='el' class='account-top'>
+      <h1 class='main-title'>Ваши счета</h1>
+      {this.select}
+      <button this='btn' class='btn btn-primary btn-icon-text account-top__btn'>
+        {topMenuiIcons.create}
+        <span this='btnName'>Созлать новый счет</span>
+      </button>
+    </div>
+    // this.customSelect = customSelect(this.select)[0];
   };
 
-  static changeIcon(name) {
+  mount() {
+    console.log('sd')
+  }
+
+  // static mount() {
+  //   this.select.value = localStorage.getItem('sorting') || '';
+
+  //   this.select.select.addEventListener('change', () => {
+  //     cards.sortProp = this.select.value;
+  //   });
+
+  //   this.btn.addEventListener('click', create);
+  //   setChildren(container, this.element);
+  // };
+
+  /*changeIcon(name) {
     this.btn.removeEventListener('click', create);
     this.btn.removeEventListener('click', back);
     switch (name) {
@@ -70,7 +88,7 @@ export default class TopMenu {
     ])
   }
 
-  static update(path) {
+  update(path) {
     path !== 'accounts' && unmount(this.element, this.select.container);
     this.element.classList.remove('mb-30');
 
@@ -99,5 +117,5 @@ export default class TopMenu {
       this.changeIcon('back');
       this.element.classList.add('mb-30');
     };
-  };
+  };*/
 };

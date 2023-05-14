@@ -7,13 +7,10 @@ import App from './modules/App';
 import Login from './modules/Login';
 
 export const container = <div class='container'></div>;
-export const main = el('main.main', container);
-export const content = el('div.content');
+export const main = <main class='main'>{container}</main>;
+export const content = <div class='content'></div>;
 
-export const app = <App />;
-// console.log(app)
-
-mount(document.body, app);
+mount(document.body, <App />);
 
 if (!localStorage.getItem('token')) {
   router.navigate('/');

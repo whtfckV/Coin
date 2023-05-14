@@ -27,12 +27,12 @@ export default class CardList {
           .then(() => {
             this.sort()
           })
-          .catch(error => setChildren(this.el, el('p', error.message)));
+          .catch(error => setChildren(this.el, <p>{error.message}</p>));
       }
     } else {
       this.fetch()
         .then(() => this.render())
-        .catch(error => setChildren(this.el, el('p', error.message)));
+        .catch(error => setChildren(this.el, <p>{error.message}</p>));
     }
   };
 
@@ -44,6 +44,7 @@ export default class CardList {
   set load(bool) {
     this._load = bool;
 
+    // Array(10).fill(<div class='card skeleton'></div>)
     this._load ?
       setChildren(this.el, [
         el('div.card.skeleton'),

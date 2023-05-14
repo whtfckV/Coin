@@ -6,13 +6,13 @@ import CardList from '../../modules/CardsList.js';
 export const cards = new CardList();
 
 export default function accounts() {
-  main.classList.remove('fix');
+  // main.classList.remove('fix');
 
-  setChildren(main, container);
-  cards.mount();
+  // setChildren(main, container);
+  // cards.mount();
 
-  cards.fetch().then(() => {
-    cards.sortProp = localStorage.getItem('sorting');
-    router.updatePageLinks();
-  });
+  // cards.fetch().then(() => {
+  //   cards.sortProp = localStorage.getItem('sorting');
+  //   router.updatePageLinks();
+  // });
 };

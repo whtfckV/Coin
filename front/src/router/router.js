@@ -9,21 +9,23 @@ import TopMenu from '../modules/TopMenu';
 import { content } from '../modules/App';
 import { app } from '..';
 
+
+const changeRout = ({ url }) => {
+  content.update(url);
+};
+
 const router = new Navigo('/');
 router.hooks({
   after({ url }) {
     nav.update(url)
-    content.update(url);
-    console.log('ss')
-    // new TopMenu.update(url);
   }
 });
 
 router.on({
-  '/': app.update,
-  '/accounts': app.update,
-  '/account/:id': app.update,
-  '/currencies': app.update,
+  '/': changeRout,
+  '/accounts': changeRout,
+  '/account/:id': changeRout,
+  '/currencies': changeRout,
   // '/currencies': {
   //   uses: currencies,
   //   hooks: {
@@ -33,6 +35,6 @@ router.on({
   //     }
   //   }
   // },
-  'banks': app.update,
+  'banks': changeRout,
 });
 export default router;

@@ -15,10 +15,4 @@ export default class App {
       </main>
     </div>
   };
-
-  update() {
-    console.log('ff')
-  }
-
-
 };

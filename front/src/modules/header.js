@@ -10,26 +10,7 @@ export default class Header {
       <div this='container' class='container header__container'>
         <Logo />
         {nav}
-        {/* <Nav this='nav' /> */}
       </div>
     </header>
   };
-
-
-  // update() {
-  //   this.path = router.getCurrentLocation().url;
-  //   if (!this.path) {
-  //     unmount(this.container, this.nav);
-  //     return;
-  //   };
-
-  //   if (this.nav) {
-  //     if (!this.container.contains(this.nav) && this.path !== '/') {
-  //       mount(this.container, this.nav);
-  //     };
-  //   };
-  //   this.nav.update();
-
-  //   router.updatePageLinks();
-  // };
 };

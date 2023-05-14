@@ -1,17 +1,20 @@
-import { svg } from 'redom';
+import { el, svg } from 'redom';
 
 export const topMenuiIcons = {
-  create: svg('svg', {
-    width: 16,
-    height: 16,
-    viewBox: '0 0 16 16',
-    fill: 'none',
-    xmlns: 'http://www.w3.org/2000/svg'
-  }, svg('path', {
-    d: 'M7.99999 7.69167e-06L8 8.00001M8 8.00001L8.00001 16M8 8.00001L16 8.00001M8 8.00001L0 8',
-    stroke: 'white',
-    'stroke-width': 2
-  })),
+  create: <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg' >
+    <path d='M7.99999 7.69167e-06L8 8.00001M8 8.00001L8.00001 16M8 8.00001L16 8.00001M8 8.00001L0 8' stroke='white' stroke-width='2' />
+  </svg>,
+  // create: svg('svg', {
+  //   width: 16,
+  //   height: 16,
+  //   viewBox: '0 0 16 16',
+  //   fill: 'none',
+  //   xmlns: 'http://www.w3.org/2000/svg'
+  // }, svg('path', {
+  //   d: 'M7.99999 7.69167e-06L8 8.00001M8 8.00001L8.00001 16M8 8.00001L16 8.00001M8 8.00001L0 8',
+  //   stroke: 'white',
+  //   'stroke-width': 2
+  // })),
   back: svg('svg', {
     width: 16,
     height: 12,
