@@ -1,6 +1,5 @@
 import { setChildren, el } from 'redom';
-import { content } from '..';
-import createCard from '../scripts/card';
+import Card from './Card'
 import WorkApi from './WorkApi';
 import router from '../router/router';
 
@@ -8,12 +7,19 @@ export default class CardList {
   constructor() {
     <ul this='el' class='list-reset card-list'></ul>
     this.load;
-    this.fetch().then(() => {
-      this.sortProp = localStorage.getItem('sorting');
-      router.updatePageLinks();
-    });
-  }
+    this.sortProp = localStorage.getItem('sorting');
+  };
 
+  set data(prop) {
+    this._data = prop;
+    this.sort();
+    this.render();
+  };
+
+  get data() {
+    return this._data;
+  };
+  /*
   set sortProp(prop) {
     this._prop = prop;
 
@@ -39,29 +45,27 @@ export default class CardList {
   get sortProp() {
     return this._prop;
   };
-
+  */
 
   set load(bool) {
     this._load = bool;
 
-    // Array(10).fill(<div class='card skeleton'></div>)
+    console.log(Array(10).fill(<div class='card skeleton'></div>))
+
     this._load ?
-      setChildren(this.el, [
-        el('div.card.skeleton'),
-        el('div.card.skeleton'),
-        el('div.card.skeleton'),
-        el('div.card.skeleton'),
-        el('div.card.skeleton'),
-        el('div.card.skeleton'),
-        el('div.card.skeleton'),
-        el('div.card.skeleton'),
-        el('div.card.skeleton'),
-      ]) :
-      setChildren(this.el, []);
+    /*
+      ДАННЫЙ КОД ОТОБРАЖАЕТ НА СТРАНИЦЕ ТОЛЬКО ОДНУ КАРТОЧКУ ИЗ СОЗДАННОГО МАССИВА НЕ МОГУ ПОНЯТЬ ПОЧЕМУ
+    */
+      setChildren(this.el, Array(10).fill(<div class='card skeleton'></div>)) :
+      null;
   };
 
   get load() {
     return this._load;
+  };
+
+  onmount() {
+    this.fetch();
   };
 
   async fetch() {
@@ -72,7 +76,7 @@ export default class CardList {
       if (error) {
         throw new Error(error);
       };
-      this.cards = payload;
+      this.data = payload;
     } catch (error) {
       throw new Error(error);
     } finally {
@@ -81,11 +85,12 @@ export default class CardList {
   };
 
   render() {
-    setChildren(this.el, this.cards.map(card => createCard(card)));
+    setChildren(this.el, this.data.map(card => <Card card={card}/>));
+    router.updatePageLinks();
   };
 
   sort() {
-    this.cards.sort((cardA, cardB) => {
+    this.data.sort((cardA, cardB) => {
       if (this.sortProp !== 'date') {
         if (Number(cardA[this.sortProp]) < Number(cardB[this.sortProp]))
           return -1;
@@ -96,7 +101,5 @@ export default class CardList {
         return -1;
       };
     });
-
-    this.render();
   };
 };

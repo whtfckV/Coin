@@ -8,12 +8,12 @@ export default class Login {
     <form this='el' class='login'>
       <fieldest this='field' class='login__field'>
         <legend class='main-title login__leg'>Вход в аккаунт</legend>
-        <div class='login_grp'>
+        <div class='login__grp'>
           <label class='login_lbl' for='login'>Логин</label>
           <input this='loginEl' name='login' id='login' class='inp login__inp' />
           <span this='loginErrorEl' class='error'></span>
         </div>
-        <div class='login_grp'>
+        <div class='login__grp'>
           <label class='login_lbl' for='password'>Пароль</label>
           <input this='passwordEl' name='password' type='password' id='password' class='inp login__inp' />
           <span this='passwordErrorEl' class='error'></span>

@@ -1,4 +1,4 @@
-import { el, unmount, mount } from "redom";
+import { el } from "redom";
 import Logo from "./Logo";
 import Nav from "./Nav";
 

@@ -1,7 +1,5 @@
-import { el, setChildren } from 'redom';
+import { el, setAttr, setChildren } from 'redom';
 import Login from './Login';
-import CardList from './CardsList';
-import router from '../router/router';
 import Accounts from './Accounts';
 
 export default class Content {
@@ -13,16 +11,19 @@ export default class Content {
 
   update(url) {
     this.path = url;
-    console.log(url)
-    // debugger;
     switch (this.path) {
       case 'accounts':
+        setAttr(this.el, {
+          className: 'content'
+        });
         setChildren(this.el, <Accounts />);
         break;
       case '':
+        setAttr(this.el, {
+          className: 'content content-login'
+        });
         setChildren(this.el, <Login />);
         break;
-    }
-  }
-
+    };
+  };
 };

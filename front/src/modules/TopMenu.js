@@ -1,10 +1,10 @@
-import { el, mount, setChildren, unmount } from 'redom';
+import { el } from 'redom';
 import customSelect from 'custom-select';
 import WorkApi from './WorkApi';
 import { container } from '..';
 import router from '../router/router';
 import { topMenuiIcons } from '../scripts/Icons';
-import { cards } from '../router/routes/accounts';
+// import { cards } from '../router/routes/accounts';
 
 
 const options = [
@@ -26,36 +26,32 @@ const options = [
 //   history.back();
 // };
 
-
-/*
-      ПРОБЛЕМА СОЗДАНИЯ КАСТОМНОГО СЕЛЕКТА
-*/
 export default class TopMenu {
-  constructor() {
+  constructor({ create }) {
     this.mySelect = <select id='sort'>
       {options.map(([value, name]) => <option value={value}>{name}</option>)}
-    </select>
-    console.log(this.mySelect)
-    debugger;
-    this.select = customSelect(this.mySelect)[0];
-    // this.select = <select id='sort'>
-    //   {options.map(([value, name]) => <option value={value}>{name}</option>)}
-    // </select>;
-    // console.log(this.customSelect);
+    </select>;
     <div this='el' class='account-top'>
       <h1 class='main-title'>Ваши счета</h1>
-      {this.select}
-      <button this='btn' class='btn btn-primary btn-icon-text account-top__btn'>
+      {this.mySelect}
+      <button onclick={create} this='btn' class='btn btn-primary btn-icon-text account-top__btn'>
         {topMenuiIcons.create}
-        <span this='btnName'>Созлать новый счет</span>
+        <span this='btnName'>Создать новый счет</span>
       </button>
     </div>
-    // this.customSelect = customSelect(this.select)[0];
   };
 
-  mount() {
-    console.log('sd')
+  onmount() {
+    customSelect(this.mySelect);
   }
+
+  // onremount() {
+
+  // }
+
+  // onunmount() {
+
+  // }
 
   // static mount() {
   //   this.select.value = localStorage.getItem('sorting') || '';

@@ -1,6 +1,5 @@
 import Navigo from 'navigo';
 import { nav } from '../modules/Header';
-import accounts from './routes/accounts';
 import root from './routes/root';
 import account from './routes/account';
 import banks from './routes/banks';
@@ -15,6 +14,7 @@ const changeRout = ({ url }) => {
 };
 
 const router = new Navigo('/');
+
 router.hooks({
   after({ url }) {
     nav.update(url)
