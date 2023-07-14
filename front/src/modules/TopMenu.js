@@ -1,10 +1,6 @@
-import { el } from 'redom';
+import { el, mount, setAttr, unmount } from 'redom';
 import customSelect from 'custom-select';
-import WorkApi from './WorkApi';
-import { container } from '..';
-import router from '../router/router';
 import { topMenuiIcons } from '../scripts/Icons';
-// import { cards } from '../router/routes/accounts';
 
 
 const options = [
@@ -14,76 +10,57 @@ const options = [
   ['date', 'По последней транзакции'],
 ];
 
-// function create() {
-//   WorkApi.createAccount()
-//   cards.fetch().then(() => {
-//     cards.render();
-//     router.updatePageLinks();
-//   })
-// };
-
-// function back() {
-//   history.back();
-// };
-
 export default class TopMenu {
-  constructor({ create }) {
-    this.mySelect = <select id='sort'>
+  constructor({ create, change }) {
+    this.backBtn = <button onclick={() => { history.back() }} this='btn' class='btn btn-primary btn-icon-text accounts-top__btn'>
+      {topMenuiIcons.back}
+      <span this='btnName'>Вернуться назад</span>
+    </button>;
+    this.createBtn = <button onclick={create} this='btn' class='btn btn-primary btn-icon-text accounts-top__btn'>
+      {topMenuiIcons.create}
+      <span this='btnName'>Создать новый счет</span>
+    </button>;
+    this.mySelect = <select id='sort' onchange={change}>
       {options.map(([value, name]) => <option value={value}>{name}</option>)}
     </select>;
-    <div this='el' class='account-top'>
+    <div this='el' class='accounts-top'>
       <h1 class='main-title'>Ваши счета</h1>
       {this.mySelect}
-      <button onclick={create} this='btn' class='btn btn-primary btn-icon-text account-top__btn'>
-        {topMenuiIcons.create}
-        <span this='btnName'>Создать новый счет</span>
-      </button>
+      {this.createBtn}
     </div>
   };
 
   onmount() {
-    customSelect(this.mySelect);
-  }
+    this.customSelect = customSelect(this.mySelect)[0];
+    this.customSelect.value = localStorage.getItem('sorting') || '';
+  };
 
-  // onremount() {
+  onunmount() {
+    this.customSelect.destroy();
+  };
 
-  // }
+  /*
+    НЕ МОГУ СКРЫТЬ СЕЛЕКТ
+  */
 
-  // onunmount() {
-
-  // }
-
-  // static mount() {
-  //   this.select.value = localStorage.getItem('sorting') || '';
-
-  //   this.select.select.addEventListener('change', () => {
-  //     cards.sortProp = this.select.value;
-  //   });
-
-  //   this.btn.addEventListener('click', create);
-  //   setChildren(container, this.element);
-  // };
-
-  /*changeIcon(name) {
-    this.btn.removeEventListener('click', create);
-    this.btn.removeEventListener('click', back);
+  changeButton(name) {
     switch (name) {
       case 'create':
-        this.btnName.textContent = 'Создать новый счёт';
-        this.btn.addEventListener('click', create);
+        unmount(this.el, this.backBtn);
+        mount(this.el, this.createBtn);
+        // if (!this.el.contains(this.mySelect)) {
+        //   console.log('ee')
+        // }
         break;
       case 'back':
-        this.btnName.textContent = 'Вернуться назад';
-        this.btn.addEventListener('click', back);
-        mount(this.btn, topMenuiIcons[name], this.icon, true);
+        // unmount(this.el, this.mySelect);
+        unmount(this.el, this.createBtn);
+        mount(this.el, this.backBtn);
         break;
-    }
-    setChildren(this.btn, [
-      topMenuiIcons[name],
-      this.btnName
-    ])
-  }
+    };
+  };
 
+  /*
   update(path) {
     path !== 'accounts' && unmount(this.element, this.select.container);
     this.element.classList.remove('mb-30');

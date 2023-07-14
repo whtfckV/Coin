@@ -1,7 +1,6 @@
 import { setChildren, el } from 'redom';
 import Card from './Card'
 import WorkApi from './WorkApi';
-import router from '../router/router';
 
 export default class CardList {
   constructor() {
@@ -16,47 +15,35 @@ export default class CardList {
     this.render();
   };
 
-  get data() {
-    return this._data;
-  };
-  /*
-  set sortProp(prop) {
-    this._prop = prop;
-
-    if (this._prop) {
-      localStorage.setItem('sorting', this._prop);
-
-      if (this.cards) {
-        this.sort()
-      } else {
-        this.fetch()
-          .then(() => {
-            this.sort()
-          })
-          .catch(error => setChildren(this.el, <p>{error.message}</p>));
-      }
-    } else {
-      this.fetch()
-        .then(() => this.render())
-        .catch(error => setChildren(this.el, <p>{error.message}</p>));
-    }
+  set sortProp(newSortProp) {
+    this._sortProp = newSortProp;
+    localStorage.setItem('sorting', newSortProp);
+    this.sort();
   };
 
   get sortProp() {
-    return this._prop;
+    return this._sortProp;
   };
-  */
+
+  get data() {
+    return this._data;
+  };
 
   set load(bool) {
     this._load = bool;
 
-    console.log(Array(10).fill(<div class='card skeleton'></div>))
-
     this._load ?
-    /*
-      ДАННЫЙ КОД ОТОБРАЖАЕТ НА СТРАНИЦЕ ТОЛЬКО ОДНУ КАРТОЧКУ ИЗ СОЗДАННОГО МАССИВА НЕ МОГУ ПОНЯТЬ ПОЧЕМУ
-    */
-      setChildren(this.el, Array(10).fill(<div class='card skeleton'></div>)) :
+      setChildren(this.el, [
+        <div class='card skeleton'></div>,
+        <div class='card skeleton'></div>,
+        <div class='card skeleton'></div>,
+        <div class='card skeleton'></div>,
+        <div class='card skeleton'></div>,
+        <div class='card skeleton'></div>,
+        <div class='card skeleton'></div>,
+        <div class='card skeleton'></div>,
+        <div class='card skeleton'></div>,
+      ]) :
       null;
   };
 
@@ -85,11 +72,11 @@ export default class CardList {
   };
 
   render() {
-    setChildren(this.el, this.data.map(card => <Card card={card}/>));
-    router.updatePageLinks();
+    setChildren(this.el, this.data.map(card => <Card card={card} />));
   };
 
   sort() {
+    if (!this.data) return;
     this.data.sort((cardA, cardB) => {
       if (this.sortProp !== 'date') {
         if (Number(cardA[this.sortProp]) < Number(cardB[this.sortProp]))

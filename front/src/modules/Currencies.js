@@ -1,19 +1,26 @@
-import { setChildren, el } from "redom";
+import { setChildren, el, setAttr } from "redom";
 import WorkApi from "./WorkApi";
 
 export default class Currencies {
-  constructor(container) {
-    this.container = container;
+  constructor({ account }) {
+    <div this='el' class='currencies'>
+    </div>
+  };
 
+  onmount() {
     this.fetch();
-  }
+  };
 
   set load(bool) {
     this._load = bool;
 
     this._load ?
-      this.container.classList.add('skeleton') :
-      this.container.classList.remove('skeleton');
+      setAttr(this.el, {
+        className: 'currencies skeleton'
+      }) :
+      setAttr(this.el, {
+        className: 'currencies'
+      });
   }
 
   get load() {
@@ -48,7 +55,7 @@ export default class Currencies {
 
   render() {
     const values = Object.values(this.data);
-    setChildren(this.container, [
+    setChildren(this.el, [
       el('h3.currencies__title', 'Ваши валюты'),
       el('ul.your__list', [
         values.map(({ amount, code }) => amount ? el('li.currency', [

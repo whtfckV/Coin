@@ -5,59 +5,86 @@ import AccountInfo from "./AccountInfo";
 import WorkApi from "./WorkApi";
 
 export default class Transfer {
-  static state = {
-    error: {
-      am: false,
-      rec: false
-    }
+  // static state = {
+  //   error: {
+  //     am: false,
+  //     rec: false
+  //   }
+  // };
+  // static count = 0;
+  // static oldAccounts = JSON.parse(localStorage.getItem('accounts')) ?? [];
+  // static oldAccountsList = el('ul.list-reset.form-transfer__dropdown', this.oldAccounts
+  //   .map(this.createListElement.bind(this)));
+  // static title = el('legend.form-transfer__name.subtitle', 'Новый перевод');
+  // static recipient = el('input#recipient.inp.form-transfer__inp', {
+  //   autocomplete: 'off',
+  //   oninput: this.handleInputRecipient,
+  //   onfocus: this.handleFocus.bind(this),
+  // });
+  // static recipientError = el('span.form-transfer__error');
+  // static recipientGroup = el('div.form-transfer__group', [
+  //   this.recipient,
+  //   this.recipientError
+  // ]);
+  // static transferAmount = el('input#transferAmount.inp.form-transfer__inp', {
+  //   autocomplete: 'off',
+  //   oninput: this.handleInputAmount
+  // });
+  // static transferAmountError = el('span.form-transfer__error');
+  // static transferAmountGroup = el('div.form-transfer__group', [this.transferAmount, this.transferAmountError]);
+  // static submit = el('button.btn.btn-l.btn-primary.btn-icon-text.form-transfer__btn', [
+  //   transferIcon,
+  //   el('span', 'Отправить')
+  // ]);
+  // static form = el('form.account__form-transfer.form-transfer.bg-grey', el('fieldset.form-transfer__field', [
+  //   this.title,
+  //   el('label.form-transfer__lbl', {
+  //     for: 'recipient'
+  //   }, 'Номер счета получателя'),
+  //   this.recipientGroup,
+  //   el('label.form-transfer__lbl', {
+  //     for: 'transferAmount'
+  //   }, 'Сумма перевода'),
+  //   this.transferAmountGroup,
+  //   this.submit,
+  // ]), {
+  //   onsubmit: this.handleSubmit
+  // });
+
+  constructor({ account }) {
+    <from this='el' class='account__form-transfer form-transfer bg-grey' onsubmit={this.handleSubmit}>
+      <legend class='form-transfer__name subtitle'>Новый перевод</legend>
+      <label class='form-transfer__lbl' for='recipient'>Номер счета получателя</label>
+      <div class='form-transfer__group'>
+        <input
+          id='recipient'
+          class='inp form-transfer__inp'
+          autocomplete='off'
+          oninput={this.handleInputRecipient}
+          onfocus={this.handleFocus.bind(this)} />
+        <span class='form-transfer__error'></span>
+      </div>
+      <label class='form-transfer__lbl' for='transferAmount'>Сумма перевода</label>
+      <div class='form-transfer__group'>
+        <input
+          id='transferAmount'
+          class='inp form-transfer__inp'
+          autocomplete='off'
+          oninput={this.handleInputAmount} />
+        <span class='form-transfer__error'></span>
+      </div>
+      <button class='btn btn-l btn-primary btn-icon-text form-transfer__btn'>
+        {transferIcon}
+        <span>Отправить</span>
+      </button>
+    </from >
   };
-  static count = 0;
-  static oldAccounts = JSON.parse(localStorage.getItem('accounts')) ?? [];
-  static oldAccountsList = el('ul.list-reset.form-transfer__dropdown', this.oldAccounts
-    .map(this.createListElement.bind(this)));
-  static title = el('legend.form-transfer__name.subtitle', 'Новый перевод');
-  static recipient = el('input#recipient.inp.form-transfer__inp', {
-    autocomplete: 'off',
-    oninput: this.handleInputRecipient,
-    onfocus: this.handleFocus.bind(this),
-  });
-  static recipientError = el('span.form-transfer__error');
-  static recipientGroup = el('div.form-transfer__group', [
-    this.recipient,
-    this.recipientError
-  ]);
-  static transferAmount = el('input#transferAmount.inp.form-transfer__inp', {
-    autocomplete: 'off',
-    oninput: this.handleInputAmount
-  });
-  static transferAmountError = el('span.form-transfer__error');
-  static transferAmountGroup = el('div.form-transfer__group', [this.transferAmount, this.transferAmountError]);
-  static submit = el('button.btn.btn-l.btn-primary.btn-icon-text.form-transfer__btn', [
-    transferIcon,
-    el('span', 'Отправить')
-  ]);
-  static form = el('form.account__form-transfer.form-transfer.bg-grey', el('fieldset.form-transfer__field', [
-    this.title,
-    el('label.form-transfer__lbl', {
-      for: 'recipient'
-    }, 'Номер счета получателя'),
-    this.recipientGroup,
-    el('label.form-transfer__lbl', {
-      for: 'transferAmount'
-    }, 'Сумма перевода'),
-    this.transferAmountGroup,
-    this.submit,
-  ]), {
-    onsubmit: this.handleSubmit
-  });
 
-  constructor() { };
+  // static setState({ account }) {
+  //   this.account = account;
+  // };
 
-  static setState({ account }) {
-    this.account = account;
-  };
-
-  static handleSubmit(e) {
+  handleSubmit(e) {
     e.preventDefault();
 
     const recipientInp = this.elements['recipient'];
@@ -98,7 +125,7 @@ export default class Transfer {
       });
   };
 
-  static handleFocus() {
+  handleFocus() {
     if (this.oldAccounts.length) {
 
       setChildren(this.oldAccountsList, this.oldAccounts
@@ -117,23 +144,23 @@ export default class Transfer {
     не доделал
 
   */
-  static handleKeyDown() {
-    if (document.activeElement === Transfer.recipient) {
-      Transfer.oldAccountsList.children[Transfer.count].children[0].focus()
-    } else {
-      Transfer.recipient.focus()
-    };
-  };
+  // static handleKeyDown() {
+  //   if (document.activeElement === Transfer.recipient) {
+  //     Transfer.oldAccountsList.children[Transfer.count].children[0].focus()
+  //   } else {
+  //     Transfer.recipient.focus()
+  //   };
+  // };
 
-  static handleClickOut({ target }) {
-    if (!Transfer.recipientGroup.contains(target)) {
-      Transfer.recipientGroup.removeEventListener('keydown', Transfer.handleKeyDown);
-      document.removeEventListener('click', Transfer.handleClickOut);
-      unmount(Transfer.recipientGroup, Transfer.oldAccountsList);
-    };
-  };
+  // static handleClickOut({ target }) {
+  //   if (!Transfer.recipientGroup.contains(target)) {
+  //     Transfer.recipientGroup.removeEventListener('keydown', Transfer.handleKeyDown);
+  //     document.removeEventListener('click', Transfer.handleClickOut);
+  //     unmount(Transfer.recipientGroup, Transfer.oldAccountsList);
+  //   };
+  // };
 
-  static handleInputRecipient() {
+  handleInputRecipient() {
     this.value = this.value.replace(/[^0-9]/g, '');
     if (Transfer.state.error.rec) {
       Transfer.setError('rec', '');
@@ -152,7 +179,7 @@ export default class Transfer {
     };
   };
 
-  static handleInputAmount() {
+  handleInputAmount() {
     this.value = this.value.replace(/[^0-9]/g, '');
     if (Transfer.state.error.am) {
       Transfer.setError('am', '');
@@ -165,13 +192,13 @@ export default class Transfer {
     };
   };
 
-  static createListElement(account) {
-    return el('li.form-transfer__dropdown-item', el('button.form-transfer__dropdown-btn', {
-      onclick: this.handleClick
-    }, account));
-  };
+  // static createListElement(account) {
+  //   return el('li.form-transfer__dropdown-item', el('button.form-transfer__dropdown-btn', {
+  //     onclick: this.handleClick
+  //   }, account));
+  // };
 
-  static handleClick(event) {
+  handleClick(event) {
     Transfer.recipient.value = event.target.textContent;
     if (Transfer.state.error.rec) {
       Transfer.setError('rec', '');
@@ -187,7 +214,7 @@ export default class Transfer {
     unmount(Transfer.recipientGroup, Transfer.oldAccountsList);
   };
 
-  static setError(fieldName, error) {
+  setError(fieldName, error) {
     const field = {
       rec: this.recipientError,
       am: this.transferAmountError
@@ -211,7 +238,7 @@ export default class Transfer {
     field[fieldName].textContent = error;
   };
 
-  static isValid() {
+  isValid() {
     const emptyRecipient = !this.recipient.value.trim();
     const emptyAmount = !this.transferAmount.value.trim();
     const errors = [];
@@ -248,9 +275,5 @@ export default class Transfer {
       });
     };
     return !errors.length;
-  };
-
-  static mount() {
-    mount(accountContainer, this.form);
   };
 };

@@ -1,5 +1,6 @@
 import { el } from 'redom';
 import createFormattedDate from '../scripts/createFormattedDate';
+import router from '../router/router';
 
 /*
 account: "74213041477477406320783754"
@@ -27,7 +28,7 @@ export default class Card {
             <span class='card__last-transaction-date'>{transactions.map(createFormattedDate)}</span>
           </div>
         </div>
-        <a class='btn btn-l btn-primary card__btn'>Открыть</a>
+        <a onclick={() => {router.navigate(`/account/${account}`)}} class='btn btn-l btn-primary card__btn'>Открыть</a>
       </div>
     </li>
   };

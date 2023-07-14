@@ -9,8 +9,8 @@ import { content } from '../modules/App';
 import { app } from '..';
 
 
-const changeRout = ({ url }) => {
-  content.update(url);
+const changeRout = ({ url, data }) => {
+  content.update(url, data);
 };
 
 const router = new Navigo('/');
