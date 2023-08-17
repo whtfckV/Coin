@@ -4,6 +4,10 @@ import { transferIcon } from "../scripts/Icons";
 import AccountInfo from "./AccountInfo";
 import WorkApi from "./WorkApi";
 
+/*
+  ОСТАНОВИЛСЯ ЗДЕСЬ, ПЕРЕДЕЛАНА ТОЛЬКО РАЗМЕТКА ВЕСЬ ФУНКЦИОНАЛ СТАРЫЙ
+*/
+
 export default class Transfer {
   // static state = {
   //   error: {
@@ -15,69 +19,50 @@ export default class Transfer {
   // static oldAccounts = JSON.parse(localStorage.getItem('accounts')) ?? [];
   // static oldAccountsList = el('ul.list-reset.form-transfer__dropdown', this.oldAccounts
   //   .map(this.createListElement.bind(this)));
-  // static title = el('legend.form-transfer__name.subtitle', 'Новый перевод');
-  // static recipient = el('input#recipient.inp.form-transfer__inp', {
-  //   autocomplete: 'off',
-  //   oninput: this.handleInputRecipient,
-  //   onfocus: this.handleFocus.bind(this),
-  // });
-  // static recipientError = el('span.form-transfer__error');
-  // static recipientGroup = el('div.form-transfer__group', [
-  //   this.recipient,
-  //   this.recipientError
-  // ]);
-  // static transferAmount = el('input#transferAmount.inp.form-transfer__inp', {
-  //   autocomplete: 'off',
-  //   oninput: this.handleInputAmount
-  // });
-  // static transferAmountError = el('span.form-transfer__error');
-  // static transferAmountGroup = el('div.form-transfer__group', [this.transferAmount, this.transferAmountError]);
-  // static submit = el('button.btn.btn-l.btn-primary.btn-icon-text.form-transfer__btn', [
-  //   transferIcon,
-  //   el('span', 'Отправить')
-  // ]);
-  // static form = el('form.account__form-transfer.form-transfer.bg-grey', el('fieldset.form-transfer__field', [
-  //   this.title,
-  //   el('label.form-transfer__lbl', {
-  //     for: 'recipient'
-  //   }, 'Номер счета получателя'),
-  //   this.recipientGroup,
-  //   el('label.form-transfer__lbl', {
-  //     for: 'transferAmount'
-  //   }, 'Сумма перевода'),
-  //   this.transferAmountGroup,
-  //   this.submit,
-  // ]), {
-  //   onsubmit: this.handleSubmit
-  // });
 
   constructor({ account }) {
-    <from this='el' class='account__form-transfer form-transfer bg-grey' onsubmit={this.handleSubmit}>
-      <legend class='form-transfer__name subtitle'>Новый перевод</legend>
-      <label class='form-transfer__lbl' for='recipient'>Номер счета получателя</label>
-      <div class='form-transfer__group'>
-        <input
-          id='recipient'
-          class='inp form-transfer__inp'
-          autocomplete='off'
-          oninput={this.handleInputRecipient}
-          onfocus={this.handleFocus.bind(this)} />
-        <span class='form-transfer__error'></span>
-      </div>
-      <label class='form-transfer__lbl' for='transferAmount'>Сумма перевода</label>
-      <div class='form-transfer__group'>
-        <input
-          id='transferAmount'
-          class='inp form-transfer__inp'
-          autocomplete='off'
-          oninput={this.handleInputAmount} />
-        <span class='form-transfer__error'></span>
-      </div>
-      <button class='btn btn-l btn-primary btn-icon-text form-transfer__btn'>
-        {transferIcon}
-        <span>Отправить</span>
-      </button>
+    this.account = account;
+    this.oldAccounts = JSON.parse(localStorage.getItem('accounts')) ?? [];
+    <from
+      this='el'
+      class='account__form-transfer form-transfer bg-grey'
+      onsubmit={() => { console.log('submit') }}
+    >
+      <fieldset class='form-transfer__field'>
+        <legend class='form-transfer__name subtitle'>Новый перевод</legend>
+        <label class='form-transfer__lbl' for='recipient'>Номер счета получателя</label>
+        <div class='form-transfer__group'>
+          <input
+            this='recipient'
+            id='recipient'
+            class='inp form-transfer__inp'
+            autocomplete='off'
+          // oninput={this.handleInputRecipient}
+          // onfocus={this.handleFocus.bind(this)}
+          />
+          <span class='form-transfer__error'></span>
+        </div>
+        <label class='form-transfer__lbl' for='transferAmount'>Сумма перевода</label>
+        <div class='form-transfer__group'>
+          <input
+            this='amount'
+            id='transferAmount'
+            class='inp form-transfer__inp'
+            autocomplete='off'
+          // oninput={this.handleInputAmount}
+          />
+          <span class='form-transfer__error'></span>
+        </div>
+        <button onclick={this.handleSubmit.bind(this)} class='btn btn-l btn-primary btn-icon-text form-transfer__btn' type='submit'>
+          {transferIcon}
+          <span>Отправить</span>
+        </button>
+      </fieldset>
     </from >
+  };
+
+  onmount() {
+    console.log('%cform mount', 'color: coral;');
   };
 
   // static setState({ account }) {
@@ -87,42 +72,44 @@ export default class Transfer {
   handleSubmit(e) {
     e.preventDefault();
 
-    const recipientInp = this.elements['recipient'];
-    const amountInp = this.elements['transferAmount'];
+    // const recipientInp = this.elements['recipient'];
+    // const amountInp = this.elements['transferAmount'];
+    console.log(this.recipient.value);
+    console.log(this.amount.value);
 
-    if (!Transfer.isValid()) {
-      return;
-    };
+    // if (!Transfer.isValid()) {
+    //   return;
+    // };
 
-    const recipient = recipientInp.value;
-    const amount = amountInp.value;
+    // const recipient = recipientInp.value;
+    // const amount = amountInp.value;
 
-    WorkApi.transferFunds(Transfer.account, recipient, amount)
-      .then(({ payload, error }) => {
-        if (error) throw new Error(error);
-        const balance = payload.balance;
+    // WorkApi.transferFunds(Transfer.account, recipient, amount)
+    //   .then(({ payload, error }) => {
+    //     if (error) throw new Error(error);
+    //     const balance = payload.balance;
 
-        if (!Transfer.oldAccounts.includes(recipient)) {
-          Transfer.oldAccounts.push(recipient);
-          localStorage.setItem('accounts', JSON.stringify(Transfer.oldAccounts));
-        };
+    //     if (!Transfer.oldAccounts.includes(recipient)) {
+    //       Transfer.oldAccounts.push(recipient);
+    //       localStorage.setItem('accounts', JSON.stringify(Transfer.oldAccounts));
+    //     };
 
-        AccountInfo.setState({ balance });
-        recipientInp.value = '';
-        amountInp.value = '';
-      })
-      .catch(error => {
-        switch (error.message) {
-          case 'Invalid account to':
-            Transfer.setError('rec', 'Аккаунта с таким номером нет');
-            return;
-          case 'Overdraft prevented':
-            Transfer.setError('am', 'Недостаточно средств на балансе');
-            return;
-          default:
-            throw new Error(error);
-        }
-      });
+    //     AccountInfo.setState({ balance });
+    //     recipientInp.value = '';
+    //     amountInp.value = '';
+    //   })
+    //   .catch(error => {
+    //     switch (error.message) {
+    //       case 'Invalid account to':
+    //         Transfer.setError('rec', 'Аккаунта с таким номером нет');
+    //         return;
+    //       case 'Overdraft prevented':
+    //         Transfer.setError('am', 'Недостаточно средств на балансе');
+    //         return;
+    //       default:
+    //         throw new Error(error);
+    //     }
+    //   });
   };
 
   handleFocus() {

@@ -3,7 +3,6 @@ import { nav } from '../modules/Header';
 import root from './routes/root';
 import account from './routes/account';
 import banks from './routes/banks';
-import currencies, { strim } from './routes/currencies';
 import TopMenu from '../modules/TopMenu';
 import { content } from '../modules/App';
 import { app } from '..';

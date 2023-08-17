@@ -5,14 +5,16 @@ import TopMenu from './TopMenu';
 import CardList from './CardsList';
 import WorkApi from './WorkApi';
 import AccountInfo from './AccountInfo';
+import Currencies from './Currencies';
 
 export default class Content {
   constructor() {
     <div this='el' class='content'>
       <TopMenu this='menu' create={this.createAccount} change={this.changeSort} />
-      <section this='section'></section>
+      <section this='section'>
+        <CardList this='cards' />
+      </section>
     </div>
-    this.cards = <CardList />;
   };
 
   onmount() {
@@ -21,13 +23,16 @@ export default class Content {
     };
   };
 
-  createAccount = () => {
-    WorkApi.createAccount().then(res => {
-      this.cards.data = res;
-    });
-    this.cards.fetch().then(() => {
-      this.cards.render();
-    });
+  createAccount = async () => {
+    try {
+      const { payload, error } = await WorkApi.createAccount();
+      if (error) {
+        throw new Error(error);
+      };
+      this.cards.data = [...this.cards.data, payload];
+    } catch (error) {
+      console.log(error);
+    };
   };
 
   changeSort = ({ target: { value } }) => {
@@ -39,11 +44,11 @@ export default class Content {
     const reg = new RegExp(/account\/\d{26}/);
     this.path = url;
 
-    if (reg.test(url)) {
+    if (reg.test(this.path)) {
       setChildren(this.section, <AccountInfo account={data.id} />);
-      this.menu.changeButton('back');
+      this.menu.update('back');
     } else {
-      this.menu.changeButton('create');
+      this.menu.update('create');
     }
 
     switch (this.path) {
@@ -53,6 +58,11 @@ export default class Content {
         });
         mount(this.el, this.menu, this.section);
         setChildren(this.section, this.cards);
+        break;
+      case 'currencies':
+        mount(this.el, this.menu, this.section);
+        this.menu.update(this.path)
+        setChildren(this.section, <Currencies />);
         break;
       case '':
         setAttr(this.el, {

@@ -12,6 +12,8 @@ const options = [
 
 export default class TopMenu {
   constructor({ create, change }) {
+    this.defaultCustomSelectClass = 'custom-select-container';
+    this.elDefaultClass = 'accounts-top';
     this.backBtn = <button onclick={() => { history.back() }} this='btn' class='btn btn-primary btn-icon-text accounts-top__btn'>
       {topMenuiIcons.back}
       <span this='btnName'>Вернуться назад</span>
@@ -23,8 +25,8 @@ export default class TopMenu {
     this.mySelect = <select id='sort' onchange={change}>
       {options.map(([value, name]) => <option value={value}>{name}</option>)}
     </select>;
-    <div this='el' class='accounts-top'>
-      <h1 class='main-title'>Ваши счета</h1>
+    <div this='el' class={this.elDefaultClass}>
+      <h1 this='title' class='main-title'>Ваши счета</h1>
       {this.mySelect}
       {this.createBtn}
     </div>
@@ -37,58 +39,46 @@ export default class TopMenu {
 
   onunmount() {
     this.customSelect.destroy();
+    this.customSelect = null;
   };
 
-  /*
-    НЕ МОГУ СКРЫТЬ СЕЛЕКТ
-  */
-
-  changeButton(name) {
+  update(name) {
     switch (name) {
       case 'create':
+        setAttr(this.title, {
+          textContent: 'Ваши счета'
+        });
+        setAttr(this.el, {
+          className: this.elDefaultClass
+        });
         unmount(this.el, this.backBtn);
         mount(this.el, this.createBtn);
-        // if (!this.el.contains(this.mySelect)) {
-        //   console.log('ee')
-        // }
+        if (this.customSelect) {
+          mount(this.el, this.customSelect.container, this.createBtn);
+        };
         break;
       case 'back':
-        // unmount(this.el, this.mySelect);
+        unmount(this.el, this.customSelect.container);
+        setAttr(this.title, {
+          textContent: 'Просмотр счёта',
+        });
+        setAttr(this.el, {
+          className: `${this.elDefaultClass} mb-24`
+        })
         unmount(this.el, this.createBtn);
         mount(this.el, this.backBtn);
         break;
+      case 'currencies':
+        unmount(this.el, this.customSelect.container);
+        setAttr(this.title, {
+          textContent: 'Валютный обмен',
+        });
+        setAttr(this.el, {
+          className: `${this.elDefaultClass} mb-56`
+        })
+        unmount(this.el, this.createBtn);
+        unmount(this.el, this.backBtn);
+        break;
     };
   };
-
-  /*
-  update(path) {
-    path !== 'accounts' && unmount(this.element, this.select.container);
-    this.element.classList.remove('mb-30');
-
-    if (isNaN(Number(path.split('/').slice(-1)))) {
-      switch (path) {
-        case 'accounts':
-          this.title.textContent = 'Ваши счета';
-          this.changeIcon('create');
-          mount(this.element, this.select.container);
-          mount(this.element, this.btn);
-          break;
-        case 'banks':
-          this.title.textContent = 'Карта банкоматов';
-          unmount(this.element, this.btn);
-          break;
-        case 'currencies':
-          this.title.textContent = 'Валютный обмен';
-          unmount(this.element, this.btn);
-          break;
-        default:
-          this.changeIcon('back');
-          break;
-      }
-    } else {
-      this.title.textContent = 'Просмотр счёта';
-      this.changeIcon('back');
-      this.element.classList.add('mb-30');
-    };
-  };*/
 };

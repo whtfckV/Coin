@@ -2,8 +2,8 @@ import { el, setAttr } from 'redom';
 
 export default class AccountBalance {
   constructor() {
-    <div this='el' class='top-info__balance'>
-      <strong class='top-info__mame'>Баланс</strong>
+    <div this='el' class='account__balance balance'>
+      <strong class='account__mame'>Баланс</strong>
       <span this='balance' class='balance__amount'></span>
     </div>
     this.data;
@@ -13,9 +13,9 @@ export default class AccountBalance {
   set load(bool) {
     this._load = bool;
     this.load ? setAttr(this.el, {
-      className: 'top-info__balance skeleton',
+      className: 'account__balance skeleton',
     }) : setAttr(this.el, {
-      className: 'top-info__balance'
+      className: 'account__balance'
     });
   };
 

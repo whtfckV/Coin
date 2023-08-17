@@ -5,7 +5,7 @@ import validLoginForm from "../scripts/validationLoginForm";
 
 export default class Login {
   constructor() {
-    <form this='el' class='login'>
+    <form this='el' class='login' onsubmit={this.submit}>
       <fieldest this='field' class='login__field'>
         <legend class='main-title login__leg'>Вход в аккаунт</legend>
         <div class='login__grp'>
@@ -18,7 +18,7 @@ export default class Login {
           <input this='passwordEl' name='password' type='password' id='password' class='inp login__inp' />
           <span this='passwordErrorEl' class='error'></span>
         </div>
-        <button onclick={this.submit} this='btnSubmit' type='submit' class='btn btn-primary btn-s login__btn'>Войти</button>
+        <button this='btnSubmit' type='submit' class='btn btn-primary btn-s login__btn'>Войти</button>
       </fieldest>
     </form>
   };

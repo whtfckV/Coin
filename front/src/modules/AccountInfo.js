@@ -7,10 +7,8 @@ import Transfer from "./Transfer";
 export default class AccountInfo {
   constructor({ account }) {
     <div this='el' class='account'>
-      <div class='account__top-info top-info'>
-        <AccountTitle account={account} />
-        <AccountBalance this='balance' />
-      </div>
+      <AccountTitle account={account} />
+      <AccountBalance this='balance' />
       <Transfer />
     </div>
     this.account = account;
@@ -27,10 +25,10 @@ export default class AccountInfo {
   };
 
   onmount() {
-    this.getData();
+    this.fetch();
   };
 
-  async getData() {
+  async fetch() {
     this.load = true;
     try {
       const { payload: { account, balance, transactions }, error } = await WorkApi.getAccount(this.account);

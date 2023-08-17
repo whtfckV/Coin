@@ -27,7 +27,7 @@ export default function validLoginForm(login, password) {
     loginErrors.push('Пробелы в логине');
   };
 
-  if (login.value.trim().replace(/\s/g, '').length <= 5) {
+  if (login.value.trim().replace(/\s/g, '').length <= 5 && login.value.trim().replace(/\s/g, '').length > 1) {
     loginErrors.push('Логин короткий');
   }
 

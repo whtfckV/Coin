@@ -251,6 +251,14 @@ a {
   }
 }
 
+.error {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 2px);
+  font-size: 12px;
+  color: var(--color-error);
+}
+
 .subtitle {
   font-family: var(--font-work);
   font-weight: 700;
@@ -304,15 +312,6 @@ a {
     display: flex;
     flex-direction: column;
     min-width: 300px;
-
-
-    .error {
-      position: absolute;
-      left: 0;
-      top: calc(100% + 2px);
-      font-size: 12px;
-      color: var(--color-error);
-    }
   }
 
   &__lbl {
@@ -462,6 +461,15 @@ a {
   margin-bottom: 50px;
   column-gap: 35px;
 
+
+  &.mb-56 {
+    margin-bottom: 56px;
+  }
+
+  &.mb-24 {
+    margin-bottom: 24px;
+  }
+
   &.mb-30 {
     margin-bottom: 30px;
   }
@@ -589,29 +597,24 @@ a {
     padding: 25px 50px;
   }
 
-  &__top-info {
-    grid-column: span 2;
-  }
-}
-
-.top-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-work);
-
   &__title {
+    grid-area: 1/1/1/-1;
     font-weight: 400;
     font-size: 34px;
     line-height: 40px;
+    z-index: 2;
   }
 
   &__balance {
     display: flex;
     column-gap: 50px;
+    grid-area: 1/1/1/-1;
+    align-items: center;
+    justify-self: end;
     font-size: 20px;
   }
 }
+
 
 .form-transfer {
   &__field {
@@ -848,6 +851,7 @@ a {
   }
 
   &__selects {
+    position: relative;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -864,6 +868,7 @@ a {
   }
 
   .amount {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 8px;
