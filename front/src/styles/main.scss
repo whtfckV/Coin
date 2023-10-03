@@ -12,6 +12,7 @@
 @import 'currencies.scss';
 @import 'exchange.scss';
 @import 'history.scss';
+@import 'bar-chart.scss';
 
 html {
   box-sizing: border-box;
@@ -36,6 +37,11 @@ a {
   display: flex;
   align-items: center;
   text-decoration: none;
+}
+
+button {
+  border: none;
+  cursor: pointer;
 }
 
 .list-reset {

@@ -42,11 +42,12 @@ export default class Content {
   };
 
   update(url, data) {
-    const reg = new RegExp(/account\/\d{26}/);
     this.path = url;
 
-    if (reg.test(this.path)) {
-      setChildren(this.section, <AccountInfo account={data.id} />);
+    if (data?.id) {
+      const detail = this.path.endsWith('detailed-balance');
+
+      setChildren(this.section, <AccountInfo account={data.id} detail={detail} />);
       this.menu.update('back');
     } else {
       this.menu.update('create');

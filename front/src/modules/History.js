@@ -1,9 +1,10 @@
 import { el, mount, setChildren } from 'redom';
 
 export default class History {
-  constructor({ account }) {
+  constructor({ account, detailedBalance, detail }) {
     this.account = account;
-    <div this='el' class='account__history history bg-grey'>
+    this.numberOfTransactions = detail ? 25 : 10;
+    <button this='el' class='account__history history bg-grey' onclick={() => { detailedBalance() }}>
       <table class='history__table history-table'>
         <caption class='history__title subtitle'>История переводов</caption>
         <thead class='history-table__head'>
@@ -18,32 +19,32 @@ export default class History {
 
         </tbody>
       </table>
-    </div>
+    </button>
   };
 
   set transactions(transactions) {
     this._transactions = transactions;
-    this.lastTenTransactions = transactions.reverse().slice(0, 10);
+    this.lastTransactions = transactions.reverse().slice(0, this.numberOfTransactions);
   };
 
   get transactions() {
     return this._transactions;
   };
 
-  set lastTenTransactions(newLastTenTransactions) {
-    this._lastTenTransactions = newLastTenTransactions;
+  set lastTransactions(newLastTransactions) {
+    this._lastTransactions = newLastTransactions;
     this.createTable();
   };
 
-  get lastTenTransactions() {
-    return this._lastTenTransactions;
+  get lastTransactions() {
+    return this._lastTransactions;
   };
 
   // Создание тела таблицы
   createTable() {
     setChildren(this.tbody, []);
-    if (this.lastTenTransactions.length) {
-      this.lastTenTransactions
+    if (this.lastTransactions.length) {
+      this.lastTransactions
         .map(({ date, from, to, amount }) => {
           mount(this.tbody, <tr>
             <td>{from}</td>

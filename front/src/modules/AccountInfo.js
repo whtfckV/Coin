@@ -1,21 +1,24 @@
-import { el, mount } from "redom";
+import { el, mount, unmount } from "redom";
 import AccountTitle from "./AccountTitle";
 import AccountBalance from "./AccountBalance";
 import WorkApi from "./WorkApi";
 import Transfer from "./Transfer";
 import History from "./History";
 import BarChart from "./BarChart";
+import router from '../router/router';
 
 export default class AccountInfo {
-  constructor({ account }) {
+  constructor({ account, detail }) {
     this.load;
     this.account = account;
-    <div this='el' class='account'>
+    this.detail = detail;
+    <div this='el' class={`account ${detail ? 'detail' : ''}`}>
       <AccountTitle account={this.account} />
       <AccountBalance this='balance' />
-      <Transfer account={account} updateBalance={this.updateBalance.bind(this)} updateHistory={this.updateHistory.bind(this)} />
-      <BarChart this='barChart' account={account} />
-      <History this='history' account={account} />
+      {!detail &&
+        <Transfer this='transfer' account={account} updateBalance={this.updateBalance.bind(this)} updateHistory={this.updateHistory.bind(this)} />}
+      <BarChart this='barChart' account={account} detailedBalance={this.goToDetail} detail={detail} />
+      <History this='history' account={account} detailedBalance={this.goToDetail} detail={detail}/>
     </div>
   };
 
@@ -29,8 +32,18 @@ export default class AccountInfo {
   };
 
   onmount() {
+    // console.log(this.detail)
     this.fetch();
   };
+
+  // переход на к детальной информации счета
+  goToDetail = () => {
+    router.navigate(`/account/${this.account}/detailed-balance`);
+  };
+
+  update() {
+    unmount(this.transfer)
+  }
 
   // Обновление баланса
   updateBalance(newData) {
@@ -39,9 +52,9 @@ export default class AccountInfo {
 
   // Обновление истории переводов
   updateHistory(newTransaction) {
-    this.history.lastTenTransactions = [
+    this.history.lastTransactions = [
       newTransaction,
-      ...this.history.lastTenTransactions,
+      ...this.history.lastTransactions,
     ].slice(0, 10);
   };
 

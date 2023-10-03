@@ -28,7 +28,7 @@ export default class Card {
             <span class='card__last-transaction-date'>{transactions.map(createFormattedDate)}</span>
           </div>
         </div>
-        <a onclick={() => {router.navigate(`/account/${account}`)}} class='btn btn-l btn-primary card__btn'>Открыть</a>
+        <a onclick={() => {router.navigate(`/account/${(account)}`)}} class='btn btn-l btn-primary card__btn'>Открыть</a>
       </div>
     </li>
   };

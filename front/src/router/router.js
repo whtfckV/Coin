@@ -24,6 +24,7 @@ router.on({
   '/': changeRout,
   '/accounts': changeRout,
   '/account/:id': changeRout,
+  '/account/:id/detailed-balance': changeRout,
   '/currencies': changeRout,
   // '/currencies': {
   //   uses: currencies,

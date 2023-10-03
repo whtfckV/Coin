@@ -21,12 +21,12 @@ Chart.defaults.elements.bar.backgroundColor = '#116ACC';
 
 
 export default class BarChart {
-  constructor({ account }) {
+  constructor({ account, detailedBalance }) {
     this.account = account;
-    <div this='el' class='account__bar-chart bar-chart bg-white'>
+    <button this='el' class='account__bar-chart bar-chart bg-white' onclick={() => { detailedBalance() }}>
       <h3 class='subtitle'>Динамика баланса</h3>
       <canvas this='canvas'></canvas>
-    </div>
+    </button>
   };
 
   set balance(amount) {
@@ -59,6 +59,7 @@ export default class BarChart {
         ]
       },
       options: {
+        aspectRatio: 3.2,
         scales: {
           x: {
             border: {
