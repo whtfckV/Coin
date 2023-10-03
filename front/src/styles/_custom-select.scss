@@ -1,0 +1,115 @@
+.custom-select {
+  &-container {
+    position: relative;
+    border: 1px solid var(--color-primary);
+    border-radius: 7px;
+    width: 300px;
+
+    &.is-disabled {
+      opacity: .3;
+    }
+
+    & select {
+      visibility: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 23px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 5px 5px 0 5px;
+      border-color: var(--color-second1) transparent transparent transparent;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    &.is-open {
+      &::after {
+        border-width: 0 5px 5px 5px;
+        border-color: transparent transparent var(--color-second1) transparent;
+      }
+
+      & .custom-select-panel {
+        max-height: 152px;
+      }
+    }
+  }
+
+  &-opener {
+    background-color: transparent;
+    padding: 9px 0 9px 15px;
+    display: block;
+    width: 100%;
+    line-height: 24px;
+    cursor: pointer;
+  }
+
+  &-panel {
+    position: absolute;
+    top: calc(100% + 2px);
+    z-index: 1;
+    width: 100%;
+    max-height: 0;
+    border-radius: 7px;
+    background-color: var(--color-white);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: max-height .3s ease-in-out;
+  }
+
+  &-option {
+    position: relative;
+    padding: 10px 16px;
+    line-height: 24px;
+    cursor: pointer;
+    transition: background-color .3s ease;
+
+    &:nth-child(2) {
+      margin-top: 10px;
+    }
+
+    &:last-child {
+      margin-bottom: 10px;
+    }
+
+    &.has-focus {
+      background-color: var(--color-info);
+    }
+
+    &.is-selected::after {
+      content: '';
+      position: absolute;
+      right: 19px;
+      top: 50%;
+      display: block;
+      width: 15px;
+      height: 8px;
+      border: 2px solid var(--color-second1);
+      border-top: none;
+      border-right: none;
+      transform: translateY(-50%) rotate(-45deg);
+    }
+
+    &[data-value=placeholder] {
+      display: none;
+    }
+  }
+
+  &-optgroup>&-option {
+    padding-left: 2em;
+  }
+
+  &-optgroup::before {
+    content: attr(data-label);
+    display: block;
+    padding: 0.5em;
+    color: #888;
+  }
+}

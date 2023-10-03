@@ -1,0 +1,60 @@
+.login {
+  border-radius: 50px;
+  padding: 50px 85px 50px 115px;
+  background-color: var(--color-grey7);
+  font-family: var(--font-ubuntu);
+  font-weight: 500;
+
+  @media (max-width: 480px) {
+    padding: 25px 20px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    row-gap: 25px;
+    border: none;
+    padding: 0;
+    text-align: start;
+  }
+
+  &__leg {
+    margin-bottom: 35px;
+
+    @media (max-width: 480px) {
+      margin-bottom: 15px;
+      font-size: 25px;
+    }
+  }
+
+  &__grp {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+  }
+
+  &__lbl {
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 18px);
+    transform: translateY(-50%);
+
+    @media (max-width: 480px) {
+      position: static;
+    }
+  }
+
+  &__inp {
+    min-width: 300px;
+
+    @media (max-width: 480px) {
+      min-width: auto;
+    }
+  }
+
+  &__btn {
+    margin-top: 5px;
+  }
+}

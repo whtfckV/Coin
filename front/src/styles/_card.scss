@@ -1,0 +1,82 @@
+.card {
+  $lhAmount: 22px;
+  $lhBalance: 20px;
+  $lhTrans: 15px;
+  $gap: 9px;
+  $pad: 22px;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: $gap;
+  justify-content: space-between;
+  border-radius: 9px;
+  padding: $pad;
+  min-height: 156px;
+  background-color: var(--color-white);
+  box-shadow: var(--shadow);
+
+  &.skeleton {
+    background-repeat: no-repeat;
+    background-image:
+      linear-gradient(var(--color-grey5) $lhAmount, transparent 0),
+      linear-gradient(var(--color-grey5) $lhBalance, transparent 0),
+      linear-gradient(var(--color-grey5) $lhTrans, transparent 0),
+      linear-gradient(var(--color-grey5) $lhTrans, transparent 0),
+      linear-gradient(var(--color-grey5) 48px, transparent 0);
+    background-size:
+      270px $lhAmount,
+      90px $lhBalance,
+      151px $lhTrans,
+      98px $lhTrans,
+      111px 48px;
+    background-position:
+      $pad $pad,
+      $pad calc($pad + $lhAmount + $gap),
+      $pad calc(100% - $pad - $lhTrans - 2px),
+      $pad calc(100% - $pad),
+      calc(100% - $pad) calc(100% - $pad);
+
+    @include animateSkeleton();
+  }
+
+  &__amount {
+    font-family: var(--font-roboto);
+    font-weight: 500;
+    font-size: 18px;
+    line-height: $lhAmount;
+  }
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  &__balance {
+    display: inline-block;
+    font-size: 14px;
+    line-height: $lhBalance;
+  }
+
+  &__last-transaction {
+    font-family: var(--font-work);
+
+    &-descr {
+      display: block;
+      font-weight: 700;
+      font-size: 13px;
+      line-height: $lhTrans;
+    }
+
+    &-date {
+      font-weight: 400;
+      font-size: 13px;
+      line-height: $lhTrans;
+    }
+  }
+
+  &__btn {
+    padding-left: 21.5px;
+    padding-right: 21.5px;
+  }
+}

@@ -1,0 +1,94 @@
+.btn {
+  --fs: 16px;
+  border: none;
+  border-radius: 7px;
+  padding: calc(1 * var(--fs)) calc(1.5 * var(--fs));
+  font-family: var(--font-ubuntu);
+  font-size: var(--fs);
+  font-weight: 500;
+  line-height: var(--fs);
+  transition-property: background-color, border-color;
+  transition-duration: .3s;
+  transition-timing-function: ease;
+  cursor: pointer;
+
+  &-primary {
+    color: var(--color-white);
+    background-color: var(--color-primary);
+
+    &:focus {
+      outline: none;
+      background-color: var(--btn-primary-hover);
+    }
+
+    &:hover {
+      background-color: var(--btn-primary-hover);
+    }
+
+    &:active {
+      background-color: var(--btn-primary-active);
+    }
+
+    &:disabled {
+      background-color: var(--color-grey5);
+      opacity: .5;
+    }
+  }
+
+  &-secondary {
+    color: var(--color-white);
+    background-color: var(--color-second4);
+  }
+
+  &-outline {
+    padding: calc(1 * var(--fs) - 4px) calc(1.5 * var(--fs) - 4px);
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+    background-color: var(--color-white);
+
+    &[aria-current='page'] {
+      background-color: var(--color-info);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--btn-outline-hover-border);
+      background-color: var(--btn-outline-hover);
+    }
+
+    &:hover {
+      border-color: var(--btn-outline-hover-border);
+      background-color: var(--btn-outline-hover);
+    }
+
+    &:active {
+      background-color: var(--btn-outline-active);
+    }
+
+    &:disabled {
+      border-width: 1px;
+      border-color: var(--color-grey5);
+      color: var(--color-grey5);
+      background-color: var(--color-white);
+      opacity: .5;
+    }
+  }
+
+  &-icon-text {
+    display: flex;
+    align-items: center;
+    column-gap: 14px;
+  }
+
+  &-s {
+    --fs: 14px;
+  }
+
+  &-l {
+    --fs: 16px;
+  }
+
+  &-m {
+    --fs: 18px;
+  }
+}

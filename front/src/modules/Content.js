@@ -6,6 +6,7 @@ import CardList from './CardsList';
 import WorkApi from './WorkApi';
 import AccountInfo from './AccountInfo';
 import Currencies from './Currencies';
+import getCookie from '../scripts/getCookie';
 
 export default class Content {
   constructor() {
@@ -18,7 +19,7 @@ export default class Content {
   };
 
   onmount() {
-    if (!localStorage.getItem('token')) {
+    if (!getCookie('auth')) {
       router.navigate('/');
     };
   };
@@ -65,6 +66,9 @@ export default class Content {
         setChildren(this.section, <Currencies />);
         break;
       case '':
+        if (getCookie('auth')) {
+          router.navigate('/accounts');
+        };
         setAttr(this.el, {
           className: 'content content-login'
         });

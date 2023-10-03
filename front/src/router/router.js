@@ -1,11 +1,11 @@
 import Navigo from 'navigo';
 import { nav } from '../modules/Header';
-import root from './routes/root';
-import account from './routes/account';
-import banks from './routes/banks';
-import TopMenu from '../modules/TopMenu';
+// import root from './routes/root';
+// import account from './routes/account';
+// import banks from './routes/banks';
+// import TopMenu from '../modules/TopMenu';
 import { content } from '../modules/App';
-import { app } from '..';
+// import { app } from '..';
 
 
 const changeRout = ({ url, data }) => {

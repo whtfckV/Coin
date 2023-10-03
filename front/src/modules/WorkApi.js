@@ -1,3 +1,5 @@
+import getCookie from "../scripts/getCookie";
+
 export default class WorkApi {
   constructor() { }
   static async autorization(login, password) {
@@ -17,7 +19,7 @@ export default class WorkApi {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        authorization: `Basic ${localStorage.getItem('token')}`,
+        authorization: `Basic ${getCookie('auth')}`,
       },
     }).then((res) => res.json());
   }
@@ -27,7 +29,7 @@ export default class WorkApi {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        authorization: `Basic ${localStorage.getItem('token')}`,
+        authorization: `Basic ${getCookie('auth')}`,
       },
     }).then((res) => res.json());
   }
@@ -37,7 +39,7 @@ export default class WorkApi {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        authorization: `Basic ${localStorage.getItem('token')}`,
+        authorization: `Basic ${getCookie('auth')}`,
       },
     }).then((res) => res.json());
   }
@@ -52,7 +54,7 @@ export default class WorkApi {
       }),
       headers: {
         'Content-Type': 'application/json',
-        authorization: `Basic ${localStorage.getItem('token')}`,
+        authorization: `Basic ${getCookie('auth')}`,
       },
     }).then((res) => res.json());
   }
@@ -62,7 +64,7 @@ export default class WorkApi {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        authorization: `Basic ${localStorage.getItem('token')}`,
+        authorization: `Basic ${getCookie('auth')}`,
       },
     }).then((data) => data.json());
   }
@@ -87,7 +89,7 @@ export default class WorkApi {
       }),
       headers: {
         'Content-Type': 'application/json',
-        authorization: `Basic ${localStorage.getItem('token')}`,
+        authorization: `Basic ${getCookie('auth')}`,
       },
     }).then((res) => res.json());
   }

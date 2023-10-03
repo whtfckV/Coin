@@ -1,0 +1,31 @@
+.account {
+  display: grid;
+  grid-template-columns: 85fr 100fr;
+  gap: 50px;
+
+  .bg-grey,
+  .bg-white {
+    padding: 25px 50px;
+  }
+
+  &__title {
+    grid-area: 1/1/1/-1;
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 40px;
+  }
+
+  &__balance {
+    display: flex;
+    column-gap: 50px;
+    grid-area: 1/1/1/-1;
+    align-items: center;
+    justify-self: end;
+    font-size: 20px;
+    z-index: 2;
+  }
+
+  &__history {
+    grid-area: 3/1/span 1/3;
+  }
+}

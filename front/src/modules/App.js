@@ -13,6 +13,7 @@ export default class App {
           {content}
         </div>
       </main>
+      <div id='modal'></div>
     </div>
   };
 };

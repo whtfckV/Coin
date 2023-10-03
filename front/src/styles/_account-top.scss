@@ -1,0 +1,24 @@
+.accounts-top {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 50px;
+  column-gap: 35px;
+
+
+  &.mb-56 {
+    margin-bottom: 56px;
+  }
+
+  &.mb-24 {
+    margin-bottom: 24px;
+  }
+
+  &.mb-30 {
+    margin-bottom: 30px;
+  }
+
+  &__btn {
+    margin-left: auto;
+  }
+}

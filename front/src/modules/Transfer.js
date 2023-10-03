@@ -1,32 +1,22 @@
-import { el, mount, setAttr, unmount, setChildren } from "redom";
-import { accountContainer } from "../router/routes/account";
+import { el, mount, setAttr } from "redom";
 import { transferIcon } from "../scripts/Icons";
 import AccountInfo from "./AccountInfo";
 import WorkApi from "./WorkApi";
-
-/*
-  ОСТАНОВИЛСЯ ЗДЕСЬ, ПЕРЕДЕЛАНА ТОЛЬКО РАЗМЕТКА ВЕСЬ ФУНКЦИОНАЛ СТАРЫЙ
-*/
+import Dropdown from "./Dropdown";
 
 export default class Transfer {
-  // static state = {
-  //   error: {
-  //     am: false,
-  //     rec: false
-  //   }
-  // };
-  // static count = 0;
-  // static oldAccounts = JSON.parse(localStorage.getItem('accounts')) ?? [];
-  // static oldAccountsList = el('ul.list-reset.form-transfer__dropdown', this.oldAccounts
-  //   .map(this.createListElement.bind(this)));
-
-  constructor({ account }) {
+  constructor({ account, updateBalance, updateHistory }) {
+    this.errors = {
+      recipient: false,
+      amount: false
+    };
     this.account = account;
-    this.oldAccounts = JSON.parse(localStorage.getItem('accounts')) ?? [];
-    <from
+    this.updateBalance = updateBalance;
+    this.updateHistory = updateHistory;
+    <form
       this='el'
       class='account__form-transfer form-transfer bg-grey'
-      onsubmit={() => { console.log('submit') }}
+      onsubmit={this.handleSubmit.bind(this)}
     >
       <fieldset class='form-transfer__field'>
         <legend class='form-transfer__name subtitle'>Новый перевод</legend>
@@ -37,230 +27,215 @@ export default class Transfer {
             id='recipient'
             class='inp form-transfer__inp'
             autocomplete='off'
-          // oninput={this.handleInputRecipient}
-          // onfocus={this.handleFocus.bind(this)}
+            onblur={this.handleBlur.bind(this)}
+            oninput={this.handleInputRecipient.bind(this)}
+            onfocus={this.handleFocus.bind(this)}
           />
-          <span class='form-transfer__error'></span>
+          <span this='recipientError' data-name='recipient' class='form-transfer__error'></span>
         </div>
-        <label class='form-transfer__lbl' for='transferAmount'>Сумма перевода</label>
+        <label class='form-transfer__lbl' for='amount'>Сумма перевода</label>
         <div class='form-transfer__group'>
           <input
             this='amount'
-            id='transferAmount'
+            id='amount'
             class='inp form-transfer__inp'
+            type='number'
+            min='0'
+            step='0.01'
             autocomplete='off'
-          // oninput={this.handleInputAmount}
+            oninput={this.handleInputAmount.bind(this)}
+            onkeypress={this.handleKeypress}
           />
-          <span class='form-transfer__error'></span>
+          <span this='amountError' data-name='amount' class='form-transfer__error'></span>
         </div>
-        <button onclick={this.handleSubmit.bind(this)} class='btn btn-l btn-primary btn-icon-text form-transfer__btn' type='submit'>
+        <button this='submitter' class='btn btn-l btn-primary btn-icon-text form-transfer__btn' type='submit'>
           {transferIcon}
           <span>Отправить</span>
         </button>
       </fieldset>
-    </from >
+    </form >
+    this.oldAccountsList = <Dropdown handleClick={this.handleClick.bind(this)} target={this.recipient} />;
   };
 
-  onmount() {
-    console.log('%cform mount', 'color: coral;');
+  set submitting(bool) {
+    this._submitting = bool;
+
+    // блокировка кнопки на время запроса
+    setAttr(this.submitter, {
+      disabled: this.submitting
+    });
   };
 
-  // static setState({ account }) {
-  //   this.account = account;
-  // };
+  get submitting() {
+    return this._submitting;
+  };
 
-  handleSubmit(e) {
+  // Запрос на перевод
+  async handleSubmit(e) {
     e.preventDefault();
 
-    // const recipientInp = this.elements['recipient'];
-    // const amountInp = this.elements['transferAmount'];
-    console.log(this.recipient.value);
-    console.log(this.amount.value);
+    if (!this.isValid()) {
+      return;
+    };
 
-    // if (!Transfer.isValid()) {
-    //   return;
-    // };
+    this.submitting = true;
+    try {
+      const recipient = this.recipient.value;
+      const amount = this.amount.value;
+      const { payload, error } = await WorkApi.transferFunds(this.account, recipient, amount);
 
-    // const recipient = recipientInp.value;
-    // const amount = amountInp.value;
+      if (error) {
+        throw new Error(error);
+      };
 
-    // WorkApi.transferFunds(Transfer.account, recipient, amount)
-    //   .then(({ payload, error }) => {
-    //     if (error) throw new Error(error);
-    //     const balance = payload.balance;
+      this.updateHistory(payload.transactions[payload.transactions.length - 1])
+      this.updateBalance(payload.balance);
+      this.recipient.value = '';
+      this.amount.value = '';
 
-    //     if (!Transfer.oldAccounts.includes(recipient)) {
-    //       Transfer.oldAccounts.push(recipient);
-    //       localStorage.setItem('accounts', JSON.stringify(Transfer.oldAccounts));
-    //     };
+      // Добавление нового адреса в список
+      if (!this.oldAccountsList.list.includes(recipient)) {
+        this.oldAccountsList.list = [
+          ...this.oldAccountsList.list,
+          recipient
+        ];
+      };
 
-    //     AccountInfo.setState({ balance });
-    //     recipientInp.value = '';
-    //     amountInp.value = '';
-    //   })
-    //   .catch(error => {
-    //     switch (error.message) {
-    //       case 'Invalid account to':
-    //         Transfer.setError('rec', 'Аккаунта с таким номером нет');
-    //         return;
-    //       case 'Overdraft prevented':
-    //         Transfer.setError('am', 'Недостаточно средств на балансе');
-    //         return;
-    //       default:
-    //         throw new Error(error);
-    //     }
-    //   });
-  };
-
-  handleFocus() {
-    if (this.oldAccounts.length) {
-
-      setChildren(this.oldAccountsList, this.oldAccounts
-        .map(this.createListElement.bind(this)));
-
-      mount(this.recipientGroup, this.oldAccountsList);
-
-      document.addEventListener('click', this.handleClickOut);
-      this.recipientGroup.addEventListener('keydown', this.handleKeyDown);
+    } catch (error) {
+      switch (error.message) {
+        case 'Invalid account from':
+          this.setError(this.recipientError, 'Не указан адрес счёта списания')
+          break;
+        case 'Invalid account to':
+          this.setError(this.recipientError, 'Такого счёта не существует')
+          break;
+        case 'Invalid amount':
+          this.setError(this.amountError, 'Не указана сумма перевода, или она отрицательная')
+          break;
+        case 'Overdraft prevented':
+          this.setError(this.amountError, 'на счёте недостаточно средств')
+          break;
+        default:
+          throw new Error(error);
+      }
+    } finally {
+      this.submitting = false;
     };
   };
 
-  /*
-    😅
-    Решил сделать перемещение по выподающему списку стрелками
-    не доделал
+  // Выпадение списка при фокусе
+  handleFocus() {
+    if (this.oldAccountsList.list.length) {
+      mount(document.getElementById('modal'), this.oldAccountsList);
+    };
+  };
 
-  */
-  // static handleKeyDown() {
-  //   if (document.activeElement === Transfer.recipient) {
-  //     Transfer.oldAccountsList.children[Transfer.count].children[0].focus()
-  //   } else {
-  //     Transfer.recipient.focus()
-  //   };
-  // };
-
-  // static handleClickOut({ target }) {
-  //   if (!Transfer.recipientGroup.contains(target)) {
-  //     Transfer.recipientGroup.removeEventListener('keydown', Transfer.handleKeyDown);
-  //     document.removeEventListener('click', Transfer.handleClickOut);
-  //     unmount(Transfer.recipientGroup, Transfer.oldAccountsList);
-  //   };
-  // };
+  // Закрытие списка при нажатии tab в поле recipirnt
+  handleBlur() {
+    if (this.oldAccountsList.index === -1) {
+      this.oldAccountsList.close();
+    };
+  };
 
   handleInputRecipient() {
-    this.value = this.value.replace(/[^0-9]/g, '');
-    if (Transfer.state.error.rec) {
-      Transfer.setError('rec', '');
-      Transfer.state = {
-        error: {
-          ...Transfer.state.error,
-          rec: false
-        }
+    this.recipient.value = this.recipient.value.replace(/[^0-9]/g, '');
+    if (this.errors.recipient) {
+      this.setError(this.recipientError, '');
+      this.errors = {
+        ...this.errors,
+        recipient: false
       };
     };
 
-    if (Transfer.recipientGroup.contains(Transfer.oldAccountsList)) {
-      setChildren(Transfer.oldAccountsList, Transfer.oldAccounts
-        .filter(account => account.includes(this.value))
-        .map(Transfer.createListElement.bind(Transfer)));
-    };
+    // Фильтрация списка при вводе
+    this.oldAccountsList.filter(this.recipient.value);
   };
 
+  // Невозможность ввести минус
+  handleKeypress(e) {
+    if (e.key === '-') e.preventDefault();
+  };
+
+  // Исчезновение ошибки
   handleInputAmount() {
-    this.value = this.value.replace(/[^0-9]/g, '');
-    if (Transfer.state.error.am) {
-      Transfer.setError('am', '');
-      Transfer.state = {
-        error: {
-          ...Transfer.state.error,
-          am: false
-        }
+    if (this.errors.amount) {
+      this.setError(this.amountError, '');
+      this.errors = {
+        ...this.errors,
+        amount: false
       };
     };
   };
 
-  // static createListElement(account) {
-  //   return el('li.form-transfer__dropdown-item', el('button.form-transfer__dropdown-btn', {
-  //     onclick: this.handleClick
-  //   }, account));
-  // };
-
+  // Выбор номера из списка
   handleClick(event) {
-    Transfer.recipient.value = event.target.textContent;
-    if (Transfer.state.error.rec) {
-      Transfer.setError('rec', '');
-      Transfer.state = {
-        error: {
-          ...Transfer.state.error,
-          rec: false
-        }
+    this.recipient.value = event.target.textContent;
+    this.recipient.focus();
+    this.oldAccountsList.close();
+    if (this.errors.recipient) {
+      this.setError(this.recipientError, '');
+      this.errors = {
+        ...this.errors,
+        recipient: false
       };
     };
-    Transfer.recipientGroup.removeEventListener('keydown', Transfer.handleKeyDown);
-    document.removeEventListener('click', Transfer.handleClickOut);
-    unmount(Transfer.recipientGroup, Transfer.oldAccountsList);
   };
 
-  setError(fieldName, error) {
-    const field = {
-      rec: this.recipientError,
-      am: this.transferAmountError
-    };
-
+  // Установка ошибки на поле
+  setError(errorField, error) {
     if (error) {
-      setAttr(field[fieldName].previousSibling, {
+      setAttr(errorField.previousSibling, {
         ariaInvalid: 'true'
       });
-      this.state = {
-        error: {
-          ...this.state.error,
-          [fieldName]: true
-        }
+      this.errors = {
+        ...this.errors,
+        [`${errorField.dataset.name}`]: true
       };
     } else {
-      setAttr(field[fieldName].previousSibling, {
+      setAttr(errorField.previousSibling, {
         ariaInvalid: ''
       });
     }
-    field[fieldName].textContent = error;
+    errorField.textContent = error;
   };
 
+  // Проверка на валидность
   isValid() {
     const emptyRecipient = !this.recipient.value.trim();
-    const emptyAmount = !this.transferAmount.value.trim();
-    const errors = [];
+    const emptyAmount = !this.amount.value.trim();
+    let isValid = true;
 
     this.recipientError.textContent = '';
-    this.transferAmountError.textContent = '';
+    this.amountError.textContent = '';
     setAttr(this.recipient, {
-      ariaInvalid: ''
+      ariaInvalid: '',
     });
-    setAttr(this.transferAmount, {
-      ariaInvalid: ''
+    setAttr(this.amount, {
+      ariaInvalid: '',
     });
 
     if (emptyRecipient) {
       setAttr(this.recipient, {
         ariaInvalid: 'true'
       });
-      this.setError('rec', 'Поле не должно быть пустым')
-      errors.push('rec');
+      this.setError(this.recipientError, 'Поле не должно быть пустым');
+      isValid = false;
     } else {
       setAttr(this.recipient, {
         ariaInvalid: ''
       });
     };
     if (emptyAmount) {
-      setAttr(this.transferAmount, {
+      setAttr(this.amount, {
         ariaInvalid: 'true'
       });
-      this.setError('am', 'Поле не должно быть пустым')
-      errors.push('am');
+      this.setError(this.amountError, 'Поле не должно быть пустым')
+      isValid = false;
     } else {
-      setAttr(this.transferAmount, {
+      setAttr(this.amount, {
         ariaInvalid: ''
       });
     };
-    return !errors.length;
+    return isValid;
   };
 };

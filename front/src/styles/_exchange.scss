@@ -1,0 +1,79 @@
+.exchange {
+  &__field {
+    padding: 0;
+    border: none;
+  }
+
+  &__group {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: 8fr 2fr;
+    gap: 25px;
+    font-family: var(--font-ubuntu);
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  &__selects {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    gap: 20px;
+
+    &_from,
+    &_to {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+      gap: inherit;
+    }
+  }
+
+  .amount {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__select {
+    flex-grow: 1;
+    border-radius: 7px;
+    border: 1px solid var(--color-grey5);
+    padding: 10px 15px;
+  }
+
+  &__submit {
+    grid-row: span 2;
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  &.skeleton {
+    $height: 44px;
+    $gap: 25px;
+    $pad: 50px;
+    $lh: 23px;
+    height: 256px;
+    @include animateSkeleton();
+
+    background-repeat: no-repeat;
+    background-image:
+      linear-gradient(var(--color-grey5) $lh, transparent 0),
+      linear-gradient(var(--color-grey5) $height, transparent 0),
+      linear-gradient(var(--color-grey5) $height, transparent 0),
+      linear-gradient(var(--color-grey5) calc(100%), transparent 0);
+    background-size:
+      165px $lh,
+      calc(78% - $pad * 2 - $gap) $height,
+      calc(78% - $pad * 2 - $gap) $height,
+      104px calc(100% - ($pad * 2 + $lh + $gap));
+    background-position:
+      $pad $pad,
+      $pad calc($pad + $lh + $gap),
+      $pad calc(100% - $pad),
+      calc(100% - $pad) calc(100% - $pad);
+  }
+}

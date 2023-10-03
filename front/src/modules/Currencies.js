@@ -4,7 +4,7 @@ import Exchange from "./Exchange";
 import Strim from "./Strim";
 
 export default class Currencies {
-  constructor({ account }) {
+  constructor() {
     <div this='el' class='currencies'>
       <YourCurrencies this='currencies' />
       <Strim />

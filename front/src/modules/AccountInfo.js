@@ -3,16 +3,20 @@ import AccountTitle from "./AccountTitle";
 import AccountBalance from "./AccountBalance";
 import WorkApi from "./WorkApi";
 import Transfer from "./Transfer";
+import History from "./History";
+import BarChart from "./BarChart";
 
 export default class AccountInfo {
   constructor({ account }) {
-    <div this='el' class='account'>
-      <AccountTitle account={account} />
-      <AccountBalance this='balance' />
-      <Transfer />
-    </div>
-    this.account = account;
     this.load;
+    this.account = account;
+    <div this='el' class='account'>
+      <AccountTitle account={this.account} />
+      <AccountBalance this='balance' />
+      <Transfer account={account} updateBalance={this.updateBalance.bind(this)} updateHistory={this.updateHistory.bind(this)} />
+      <BarChart this='barChart' account={account} />
+      <History this='history' account={account} />
+    </div>
   };
 
   set load(bool) {
@@ -28,6 +32,20 @@ export default class AccountInfo {
     this.fetch();
   };
 
+  // Обновление баланса
+  updateBalance(newData) {
+    this.balance.data = newData;
+  };
+
+  // Обновление истории переводов
+  updateHistory(newTransaction) {
+    this.history.lastTenTransactions = [
+      newTransaction,
+      ...this.history.lastTenTransactions,
+    ].slice(0, 10);
+  };
+
+  // Запрос данных
   async fetch() {
     this.load = true;
     try {
@@ -36,56 +54,15 @@ export default class AccountInfo {
         throw new Error(error);
       };
 
+      // добавление данных в компаненты
       this.balance.data = balance;
+      this.history.transactions = transactions;
+      this.barChart.balance = balance;
+      this.barChart.transactions = transactions;
     } catch (error) {
       console.error(error);
     } finally {
       this.load = false;
     };
-    // WorkApi.getAccount(this.account).then(({ payload: { account, balance, transactions }, error }) => {
-    //   if (error) {
-    //     throw new Error(error);
-    //   };
-
-    //   this.balance.data = balance;
-    //   // accountContainer.classList.remove('skeleton');
-    //   // AccountInfo.setState({ account, balance });
-    //   // Transfer.setState({ account })
-
-
-    //   // const barChart = new BarChart(balanceDynamicsContainer, transactions, account, balance);
-    //   // barChart.render();
-
-    //   // newTransfer.form.addEventListener('submit', function (e) {
-    //   //   e.preventDefault();
-    //   //   const recipientInp = this.elements['recipient'];
-    //   //   const amountInp = this.elements['transferAmount'];
-    //   //   const recipient = recipientInp.value;
-    //   //   const amount = amountInp.value;
-
-    //   //   if (!!amount.trim() && !!recipient.trim()) {
-    //   //     WorkApi.transferFunds(account, recipient, amount)
-    //   //       .then(({ payload: { balance }, error }) => {
-    //   //         if (error) throw new Error(error);
-
-    //   //         const accounts = JSON.parse(localStorage.getItem('accounts'));
-    //   //         if (!accounts.includes(recipient)) accounts.push(recipient);
-    //   //         localStorage.setItem('accounts', JSON.stringify(accounts));
-
-    //   //         accountTop.balance = balance;
-    //   //         recipientInp.value = '';
-    //   //         amountInp.value = '';
-
-    //   //         NewTransfer.updateOldAccounts();
-    //   //       })
-    //   //       .catch(error => console.log(error));
-    //   //   } else {
-    //   //     console.log('error, empty');
-    //   //   }
-
-    //   // })
-    // }).catch(error => {
-    //   console.log(error);
-    // });
-  }
+  };
 };

@@ -18,88 +18,122 @@ Chart.defaults.font.size = 20;
 Chart.defaults.font.weight = 700;
 Chart.defaults.font.family = 'WorkSans, Arial, Helvetica, sans-serif';
 Chart.defaults.elements.bar.backgroundColor = '#116ACC';
-Chart.defaults.elements.bar.borderColor = 'transparent';
+
 
 export default class BarChart {
-  constructor(container, transactions, account, balance) {
-    this.container = container;
+  constructor({ account }) {
     this.account = account;
-    this.balance = balance;
-    this.data = this.getData(transactions);
-    console.log(this.data);
-    this.canvas = el('canvas');
+    <div this='el' class='account__bar-chart bar-chart bg-white'>
+      <h3 class='subtitle'>Динамика баланса</h3>
+      <canvas this='canvas'></canvas>
+    </div>
+  };
+
+  set balance(amount) {
+    this._balance = amount;
+  };
+
+  get balance() {
+    return this._balance;
+  };
+
+  set transactions(data) {
+    this._transactions = data;
+    this.createBar();
+  };
+
+  get transactions() {
+    return this._transactions;
+  };
+
+  createBar() {
+    this.createData(this.transactions);
     this.BarChart = new Chart(this.canvas, {
       type: 'bar',
-      options: {
-        plugins: {
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            enabled: false
-          }
-        }
-      },
       data: {
-        labels: this.data.slice(6).map(row => row.month),
+        labels: this.data.map(row => row.month),
         datasets: [
           {
-            label: 'Динамика баланса',
-            data: this.data.slice(6).map(row => row.amount),
+            data: this.data.map(row => row.balance),
           }
         ]
-      }
+      },
+      options: {
+        scales: {
+          x: {
+            border: {
+              color: 'black',
+            },
+            grid: {
+              color: 'black',
+              borderColor: 'white',
+            },
+            ticks: {
+              // maxTicksLimit: 2,
+              color: 'black',
+            }
+          },
+          y: {
+            bounds: 'data',
+            border: {
+              color: 'black'
+            },
+            grid: {
+              color: 'black',
+              borderColor: 'white',
+            },
+            ticks: {
+              maxTicksLimit: 2,
+              // mirror: true,
+              font: {
+                weight: 500,
+              },
+              color: 'black',
+              align: 'end',
+            }
+          }
+        },
+        plugins: {
+        },
+      },
     })
-  }
+  };
 
-  getData(array) {
+  createData(array) {
     const agoDate = new Date();
-    const months = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'нояб', 'дек'];
-    const transactionsMap = [];
+    const months = ['янв', 'фев', 'мар', 'апр', 'май', 'июнь', 'июль', 'авг', 'сен', 'окт', 'нояб', 'дек'];
+    const transactionLastSixMonths = array.filter(transaction => {
+      const sixMonthAgo = new Date();
+      const transactionDate = new Date(transaction.date);
 
-    array = array.filter(({ date }) => new Date(date).getFullYear() === agoDate.getFullYear())
-    let counter = array.length - 1;
+      sixMonthAgo.setMonth(agoDate.getMonth() - 6);
+
+      return transactionDate.getMonth() > sixMonthAgo.getMonth() && transactionDate.getFullYear() >= sixMonthAgo.getFullYear();
+    });
+    const data = [{
+      month: months[agoDate.getMonth()],
+      balance: this.balance
+    }];
+
     let balanceCounter = this.balance;
 
-    agoDate.setMonth(agoDate.getMonth() + 1);
+    for (let i = 0; i < 5; i++) {
+      const transactionPerMonth = transactionLastSixMonths.filter(transaction => new Date(transaction.date).getMonth() === agoDate.getMonth());
 
-    for (let i = 0; i < months.length; i++) {
-      let amountTransactions = 0;
-      let inTransactions = 0;
-      let outTransactions = 0;
-      agoDate.setMonth(agoDate.getMonth() - 1);
-
-      for (counter; counter >= 0; counter--) {
-        const transactionDate = new Date(array[counter].date);
-        if (transactionDate.getMonth() === agoDate.getMonth()) {
-          const transactionTo = array[counter].to;
-          const transactionAmount = array[counter].amount;
-          if (transactionTo === this.account) {
-            amountTransactions += transactionAmount;
-            inTransactions += transactionAmount;
-          } else {
-            amountTransactions -= transactionAmount;
-            outTransactions -= -transactionAmount;
-          }
-        } else {
-          break;
-        }
-      }
-      balanceCounter = balanceCounter - amountTransactions;
-      const trans = {
-        month: months[agoDate.getMonth()],
-        amount: +balanceCounter.toFixed(2),
-        in: +inTransactions.toFixed(2),
-        out: +outTransactions.toFixed(2),
+      if (transactionPerMonth.length) {
+        transactionPerMonth.forEach(transaction => transaction.to === this.account ?
+          balanceCounter -= transaction.amount :
+          balanceCounter += transaction.amount
+        );
       };
-      transactionsMap.push(trans);
-    }
+      data.push({
+        month: months[agoDate.getMonth() - 1],
+        balance: balanceCounter.toFixed(2),
+      });
 
-    transactionsMap[0].amount = +this.balance.toFixed(2);
-    return transactionsMap.reverse();
-  }
+      agoDate.setMonth(agoDate.getMonth() - 1);
+    };
 
-  render() {
-    setChildren(this.container, this.canvas)
-  }
-}
+    this.data = data.reverse();
+  };
+};

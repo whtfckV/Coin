@@ -1,0 +1,72 @@
+.history {
+  &__table {
+    width: 100%;
+    font-family: var(--font-ubuntu);
+  }
+
+  &__title {
+    text-align: left;
+  }
+}
+
+.history-table {
+  border: none;
+  border-collapse: collapse;
+
+  &__head th {
+    padding: 20px 10px;
+    background-color: var(--color-primary);
+    text-align: left;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--color-white);
+
+    &:first-child {
+      padding-left: 49px;
+      border-radius: 15px 0 0 15px;
+    }
+
+    &:last-child {
+      border-radius: 0 15px 15px 0;
+    }
+
+    &:nth-child(1) {
+      width: 27%;
+    }
+
+    &:nth-child(2) {
+      width: 24%;
+    }
+
+    &:nth-child(3) {
+      width: 10%;
+    }
+
+    &:nth-child(4) {
+      width: 39%;
+    }
+  }
+
+  &__body {
+    tr {
+      border-bottom: 2px solid rgba(0, 82, 255, 0.10);
+
+      td {
+        text-align: left;
+        padding: 21px 0 26px 0;
+
+        &:first-child {
+          padding-left: 49px;
+        }
+
+        &.outgoing {
+          color: var(--color-success);
+        }
+
+        &.incoming {
+          color: var(--color-second4);
+        }
+      }
+    }
+  }
+}

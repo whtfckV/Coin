@@ -10,7 +10,7 @@ const hrefs = [
 
 const createLink = ([href, name]) =>
   <a class='btn btn-l btn-outline' href={href} data-navigo='' onclick={href ? () => { } : () => {
-    localStorage.removeItem('token');
+    document.cookie = "auth=; max-age=-1"
     router.navigate('/');
   }}>{name}</a>;
 

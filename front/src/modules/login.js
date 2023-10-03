@@ -59,7 +59,9 @@ export default class Login {
       WorkApi.autorization(login, password).then(({ payload, error }) => {
         try {
           if (error) throw new Error(error);
-          localStorage.setItem('token', payload.token)
+
+          const date = new Date(Date.now() + 86400e3);
+          document.cookie = `auth=${payload.token}; expires=${date}`;
           router.navigate('/accounts');
         } catch ({ message }) {
           switch (message) {
