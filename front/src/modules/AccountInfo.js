@@ -6,6 +6,8 @@ import Transfer from "./Transfer";
 import History from "./History";
 import BarChart from "./BarChart";
 import router from '../router/router';
+import BarChartDynamics from "./BarChartDynamics";
+import BarChartRation from "./BarChartRation";
 
 export default class AccountInfo {
   constructor({ account, detail }) {
@@ -17,8 +19,9 @@ export default class AccountInfo {
       <AccountBalance this='balance' />
       {!detail &&
         <Transfer this='transfer' account={account} updateBalance={this.updateBalance.bind(this)} updateHistory={this.updateHistory.bind(this)} />}
-      <BarChart this='barChart' account={account} detailedBalance={this.goToDetail} detail={detail} />
-      <History this='history' account={account} detailedBalance={this.goToDetail} detail={detail}/>
+      <BarChartDynamics this='barChartDynamics' account={account} detailedBalance={this.goToDetail} detail={detail} />
+      {detail && <BarChartRation this='barChartRation' account={account} />}
+      <History this='history' account={account} detailedBalance={this.goToDetail} detail={detail} />
     </div>
   };
 
@@ -70,8 +73,12 @@ export default class AccountInfo {
       // добавление данных в компаненты
       this.balance.data = balance;
       this.history.transactions = transactions;
-      this.barChart.balance = balance;
-      this.barChart.transactions = transactions;
+      this.barChartDynamics.balance = balance;
+      this.barChartDynamics.transactions = transactions;
+      if (this.detail) {
+        this.barChartRation.balance = balance;
+        this.barChartRation.transactions = transactions;
+      };
     } catch (error) {
       console.error(error);
     } finally {
