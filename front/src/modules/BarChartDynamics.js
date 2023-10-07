@@ -35,7 +35,6 @@ export default class BarChartDynamics extends BarChart {
     };
 
     data.reverse();
-    console.log(data)
     this.data = {
       labels: data.map(row => row.month),
       datasets: [

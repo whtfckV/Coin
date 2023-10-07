@@ -25,7 +25,7 @@ export default class Content {
     };
   };
 
-  createAccount = async () => {
+  createAccount = async (e) => {
     try {
       const { payload, error } = await WorkApi.createAccount();
       if (error) {

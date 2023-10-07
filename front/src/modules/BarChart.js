@@ -1,4 +1,4 @@
-import { el, setAttr, setChildren } from 'redom';
+import { el, setAttr } from 'redom';
 import {
   Chart,
   BarController,
@@ -50,7 +50,7 @@ export default class BarChart {
           borderColor: 'white',
         },
         ticks: {
-          // maxTicksLimit: 2,
+          maxTicksLimit: 2,
           font: {
             weight: 500,
           },
@@ -116,11 +116,11 @@ export default class BarChart {
           x: {
             stacked: this.stacked
           },
-          y: {
-            ticks: {
-              maxTicksLimit: this.maxTicksLimit,
-            }
-          }
+          // y: {
+          //   ticks: {
+          //     maxTicksLimit: this.maxTicksLimit,
+          //   }
+          // }
         },
       },
     });

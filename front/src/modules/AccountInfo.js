@@ -4,7 +4,6 @@ import AccountBalance from "./AccountBalance";
 import WorkApi from "./WorkApi";
 import Transfer from "./Transfer";
 import History from "./History";
-import BarChart from "./BarChart";
 import router from '../router/router';
 import BarChartDynamics from "./BarChartDynamics";
 import BarChartRation from "./BarChartRation";
@@ -35,7 +34,6 @@ export default class AccountInfo {
   };
 
   onmount() {
-    // console.log(this.detail)
     this.fetch();
   };
 

@@ -1,6 +1,5 @@
 import { el, mount, setAttr } from "redom";
 import { transferIcon } from "../scripts/Icons";
-import AccountInfo from "./AccountInfo";
 import WorkApi from "./WorkApi";
 import Dropdown from "./Dropdown";
 

@@ -12,7 +12,7 @@ export default class WorkApi {
       headers: { 'Content-Type': 'application/json' },
     });
     return await response.json();
-  }
+  };
 
   static async getAccounts() {
     return await fetch('http://localhost:3000/accounts', {
@@ -22,7 +22,7 @@ export default class WorkApi {
         authorization: `Basic ${getCookie('auth')}`,
       },
     }).then((res) => res.json());
-  }
+  };
 
   static async createAccount() {
     return await fetch('http://localhost:3000/create-account', {
@@ -32,7 +32,7 @@ export default class WorkApi {
         authorization: `Basic ${getCookie('auth')}`,
       },
     }).then((res) => res.json());
-  }
+  };
 
   static async getAccount(id) {
     return await fetch(`http://localhost:3000/account/${id}`, {
@@ -42,7 +42,7 @@ export default class WorkApi {
         authorization: `Basic ${getCookie('auth')}`,
       },
     }).then((res) => res.json());
-  }
+  };
 
   static async transferFunds(from, to, amount) {
     return await fetch('http://localhost:3000/transfer-funds', {
@@ -57,7 +57,7 @@ export default class WorkApi {
         authorization: `Basic ${getCookie('auth')}`,
       },
     }).then((res) => res.json());
-  }
+  };
 
   static async getCurrencyAccounts() {
     return await fetch('http://localhost:3000/currencies', {
@@ -67,17 +67,23 @@ export default class WorkApi {
         authorization: `Basic ${getCookie('auth')}`,
       },
     }).then((data) => data.json());
-  }
+  };
 
   static async getChangedCurrency() {
     return new WebSocket('ws://localhost:3000/currency-feed');
-  }
+  };
 
   static async getKnownCurrencies() {
     return await fetch('http://localhost:3000/all-currencies').then((data) =>
       data.json()
     );
-  }
+  };
+
+  static async getBanksLocations() {
+    return await fetch('http://localhost:3000/banks').then((data) =>
+      data.json()
+    );
+  };
 
   static async exchangeCurrency(from, to, amount) {
     return await fetch('http://localhost:3000/currency-buy', {
@@ -92,5 +98,5 @@ export default class WorkApi {
         authorization: `Basic ${getCookie('auth')}`,
       },
     }).then((res) => res.json());
-  }
-}
+  };
+};
