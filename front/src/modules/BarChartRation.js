@@ -7,24 +7,23 @@ export default class BarChartRation extends BarChart {
     this.stacked = true;
   };
 
-  createPersonalData(data, months, transactionLastMonths, agoDate) {
-
-    for (let i = 0; i < 11; i++) {
-      // debugger;
+  createPersonalData(months, transactionLastMonths, agoDate) {
+    const data = [];
+    for (let i = 0; i < 12; i++) {
       let positiveTransaction = 0;
       let negativeTransaction = 0;
       const transactionPerMonth = transactionLastMonths.filter(transaction => new Date(transaction.date).getMonth() === agoDate.getMonth());
 
       if (transactionPerMonth.length) {
         transactionPerMonth.forEach(transaction => transaction.to === this.account ?
-          negativeTransaction += transaction.amount :
-          positiveTransaction += transaction.amount
+          positiveTransaction += transaction.amount :
+          negativeTransaction += transaction.amount
         );
       };
       data.push({
-        month: months.at(agoDate.getMonth() - 1),
-        positiveTransaction: positiveTransaction.toFixed(2),
-        negativeTransaction: negativeTransaction.toFixed(2),
+        month: months.at(agoDate.getMonth()),
+        positiveTransaction: +positiveTransaction.toFixed(2),
+        negativeTransaction: +negativeTransaction.toFixed(2),
       });
 
       agoDate.setMonth(agoDate.getMonth() - 1);

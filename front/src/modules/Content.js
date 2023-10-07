@@ -7,6 +7,7 @@ import WorkApi from './WorkApi';
 import AccountInfo from './AccountInfo';
 import Currencies from './Currencies';
 import getCookie from '../scripts/getCookie';
+import Banks from './Banks';
 
 export default class Content {
   constructor() {
@@ -65,6 +66,11 @@ export default class Content {
         mount(this.el, this.menu, this.section);
         this.menu.update(this.path)
         setChildren(this.section, <Currencies />);
+        break;
+        case 'banks':
+        mount(this.el, this.menu, this.section);
+        this.menu.update(this.path)
+        setChildren(this.section, <Banks />);
         break;
       case '':
         if (getCookie('auth')) {

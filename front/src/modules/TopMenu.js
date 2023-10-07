@@ -79,6 +79,17 @@ export default class TopMenu {
         unmount(this.el, this.createBtn);
         unmount(this.el, this.backBtn);
         break;
+      case 'banks':
+        unmount(this.el, this.customSelect.container);
+        setAttr(this.title, {
+          textContent: 'Карта банкоматов',
+        });
+        setAttr(this.el, {
+          className: `${this.elDefaultClass} mb-56`
+        })
+        unmount(this.el, this.createBtn);
+        unmount(this.el, this.backBtn);
+        break;
     };
   };
 };

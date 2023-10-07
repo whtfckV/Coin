@@ -18,7 +18,7 @@ export default class AccountInfo {
       <AccountTitle account={this.account} />
       <AccountBalance this='balance' />
       {!detail &&
-        <Transfer this='transfer' account={account} updateBalance={this.updateBalance.bind(this)} updateHistory={this.updateHistory.bind(this)} />}
+        <Transfer this='transfer' account={account} updateInformation={this.updateInformation.bind(this)} />}
       <BarChartDynamics this='barChartDynamics' account={account} detailedBalance={this.goToDetail} detail={detail} />
       {detail && <BarChartRation this='barChartRation' account={account} />}
       <History this='history' account={account} detailedBalance={this.goToDetail} detail={detail} />
@@ -48,18 +48,16 @@ export default class AccountInfo {
     unmount(this.transfer)
   }
 
-  // Обновление баланса
-  updateBalance(newData) {
-    this.balance.data = newData;
-  };
-
-  // Обновление истории переводов
-  updateHistory(newTransaction) {
+  // Обновление информации
+  updateInformation({ balance, lastTransaction, allTransactions }) {
+    this.balance.data = balance;
     this.history.lastTransactions = [
-      newTransaction,
+      lastTransaction,
       ...this.history.lastTransactions,
     ].slice(0, 10);
+    this.barChartDynamics.update(balance);
   };
+
 
   // Запрос данных
   async fetch() {

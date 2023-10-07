@@ -1,11 +1,6 @@
 import Navigo from 'navigo';
 import { nav } from '../modules/Header';
-// import root from './routes/root';
-// import account from './routes/account';
-// import banks from './routes/banks';
-// import TopMenu from '../modules/TopMenu';
 import { content } from '../modules/App';
-// import { app } from '..';
 
 
 const changeRout = ({ url, data }) => {
@@ -26,15 +21,6 @@ router.on({
   '/account/:id': changeRout,
   '/account/:id/detailed-balance': changeRout,
   '/currencies': changeRout,
-  // '/currencies': {
-  //   uses: currencies,
-  //   hooks: {
-  //     leave(done, match) {
-  //       strim.close();
-  //       done();
-  //     }
-  //   }
-  // },
   'banks': changeRout,
 });
 export default router;

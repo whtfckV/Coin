@@ -26,9 +26,9 @@ export default class BarChart {
     this.numberOfMonths = 12;
     this.aspectRatio = 6.5;
     this.stacked = false;
+    this.maxTicksLimit = 3;
     this.scales = {
       x: {
-        // sacked: this.stacked,
         border: {
           color: 'black',
         },
@@ -37,7 +37,6 @@ export default class BarChart {
           borderColor: 'white',
         },
         ticks: {
-          // maxTicksLimit: 2,
           color: 'black',
         },
       },
@@ -51,7 +50,7 @@ export default class BarChart {
           borderColor: 'white',
         },
         ticks: {
-          maxTicksLimit: 2,
+          // maxTicksLimit: 2,
           font: {
             weight: 500,
           },
@@ -100,6 +99,11 @@ export default class BarChart {
     return this._transactions;
   };
 
+  update(balance) {
+    this.BarChart.data.datasets.forEach(dataset => dataset.data.pop() && dataset.data.push(balance));
+    this.BarChart.update()
+  };
+
   createBar() {
     this.createData(this.transactions);
     this.BarChart = new Chart(this.canvas, {
@@ -112,12 +116,17 @@ export default class BarChart {
           x: {
             stacked: this.stacked
           },
+          y: {
+            ticks: {
+              maxTicksLimit: this.maxTicksLimit,
+            }
+          }
         },
       },
-    })
+    });
   };
 
-  createPersonalData(data, months, transactionLastMonths, agoDate) {
+  createPersonalData({ data }) {
     return data;
   };
 
@@ -132,11 +141,7 @@ export default class BarChart {
 
       return transactionDate >= timeLater;
     });
-    let data = [{
-      month: months[agoDate.getMonth()],
-      balance: this.balance
-    }];
 
-    this.createPersonalData(data, months, transactionLastMonths, agoDate);
+    this.createPersonalData(months, transactionLastMonths, agoDate);
   };
 };

@@ -5,14 +5,13 @@ import WorkApi from "./WorkApi";
 import Dropdown from "./Dropdown";
 
 export default class Transfer {
-  constructor({ account, updateBalance, updateHistory }) {
+  constructor({ account, updateInformation }) {
     this.errors = {
       recipient: false,
       amount: false
     };
     this.account = account;
-    this.updateBalance = updateBalance;
-    this.updateHistory = updateHistory;
+    this.updateInformation = updateInformation;
     <form
       this='el'
       class='account__form-transfer form-transfer bg-grey'
@@ -88,8 +87,11 @@ export default class Transfer {
         throw new Error(error);
       };
 
-      this.updateHistory(payload.transactions[payload.transactions.length - 1])
-      this.updateBalance(payload.balance);
+      this.updateInformation({
+        balance: payload.balance,
+        lastTransaction: payload.transactions[payload.transactions.length - 1],
+        allTransactions: payload.transactions,
+      });
       this.recipient.value = '';
       this.amount.value = '';
 
