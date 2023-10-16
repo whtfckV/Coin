@@ -2,12 +2,11 @@ import { el, setAttr } from 'redom';
 
 export default class AccountBalance {
   constructor() {
+    this.load;
     <div this='el' class='account__balance balance'>
       <strong class='account__mame'>Баланс</strong>
       <span this='balance' class='balance__amount'></span>
     </div>
-    this.data;
-    this.load;
   };
 
   set load(bool) {

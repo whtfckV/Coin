@@ -16,6 +16,8 @@
   box-shadow: var(--shadow);
 
   &.skeleton {
+    background-color: var(--color-grey7);
+
     background-repeat: no-repeat;
     background-image:
       linear-gradient(var(--color-grey5) $lhAmount, transparent 0),

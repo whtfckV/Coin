@@ -23,6 +23,25 @@
     justify-self: end;
     font-size: 20px;
     z-index: 2;
+
+    &.skeleton {
+      padding-right: 60px;
+
+      &::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 5px;
+        bottom: 5px;
+        left: 80px;
+        border-radius: 10px;
+        background-repeat: no-repeat;
+        background-image: linear-gradient(var(--color-grey5), 40px, transparent 0);
+        background-color: red;
+      }
+
+      @include animateSkeleton();
+    }
   }
 
   &.detail &__bar-chart {

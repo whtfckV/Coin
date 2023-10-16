@@ -1,3 +1,54 @@
 .bar-chart {
   text-align: left;
+  overflow: hidden;
+
+  &.skeleton {
+    $padX: 50px;
+    $padY: 25px;
+    $gapY: 27px;
+    $lhLegend: 25px;
+    $lhLabel: 20px;
+    $wLabel: 110px;
+    // $wLowLabel: 15px;
+    $colGap: 15px;
+    $colWidth: 60px;
+    $colBottomDistance: 38px;
+    $BarDistance: 113px;
+
+    height: 285px;
+    background-color: var(--color-grey7);
+    background-repeat: no-repeat;
+    background-image:
+      linear-gradient(var(--color-grey5) $lhLegend, transparent 0),
+      linear-gradient(var(--color-grey5) $lhLabel, transparent 0),
+      linear-gradient(var(--color-grey5) 150px, transparent 0),
+      linear-gradient(var(--color-grey5) 150px, transparent 0),
+      linear-gradient(var(--color-grey5) 150px, transparent 0),
+      linear-gradient(var(--color-grey5) 150px, transparent 0),
+      linear-gradient(var(--color-grey5) 150px, transparent 0),
+      linear-gradient(var(--color-grey5) 150px, transparent 0),
+    ;
+    background-size:
+      200px $lhLegend,
+      $wLabel $lhLabel,
+      $colWidth 70px,
+      $colWidth 90px,
+      $colWidth 40px,
+      $colWidth 120px,
+      $colWidth 80px,
+      $colWidth 130px,
+    ;
+    background-position:
+      $padX calc($padY + 17px),
+      $padX calc($padY + $lhLegend + $gapY),
+      calc($padX + $BarDistance + $colGap) calc(100% - $padY - $colBottomDistance),
+      calc($padX + $BarDistance + $colWidth + $colGap * 2) calc(100% - $padY - $colBottomDistance),
+      calc($padX + $BarDistance + $colWidth * 2 + $colGap * 3) calc(100% - $padY - $colBottomDistance),
+      calc($padX + $BarDistance + $colWidth * 3 + $colGap * 4) calc(100% - $padY - $colBottomDistance),
+      calc($padX + $BarDistance + $colWidth * 4 + $colGap * 5) calc(100% - $padY - $colBottomDistance),
+      calc($padX + $BarDistance + $colWidth * 5 + $colGap * 6) calc(100% - $padY - $colBottomDistance),
+    ;
+
+    @include animateSkeleton();
+  }
 }

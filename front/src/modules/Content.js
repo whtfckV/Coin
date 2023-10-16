@@ -3,11 +3,12 @@ import Login from './Login';
 import router from '../router/router';
 import TopMenu from './TopMenu';
 import CardList from './CardsList';
-import WorkApi from './WorkApi';
+import WorkApi from '../scripts/WorkApi';
 import AccountInfo from './AccountInfo';
 import Currencies from './Currencies';
 import getCookie from '../scripts/getCookie';
 import Banks from './Banks';
+import Toast from '../scripts/toast';
 
 export default class Content {
   constructor() {
@@ -26,14 +27,37 @@ export default class Content {
   };
 
   createAccount = async (e) => {
+    let btn;
+    if (e.target instanceof HTMLButtonElement) {
+      btn = e.target;
+    } else {
+      btn = e.target.parentElement;
+    };
+
+
     try {
+      setAttr(btn, {
+        disabled: true
+      });
+
       const { payload, error } = await WorkApi.createAccount();
       if (error) {
-        throw new Error(error);
+        throw new Error(error)
       };
+
       this.cards.data = [...this.cards.data, payload];
     } catch (error) {
-      console.log(error);
+      new Toast({
+        title: 'Упс, что-то пошло не так',
+        text: 'Не удалось получить ответ от сервера',
+        theme: 'danger',
+        autohide: true,
+        interval: 10000,
+      });
+    } finally {
+      setAttr(btn, {
+        disabled: false
+      });
     };
   };
 
@@ -45,7 +69,9 @@ export default class Content {
   update(url, data) {
     this.path = url;
 
-    if (data?.id) {
+    // console.log(+data.id)
+
+    if (!isNaN(+data?.id)) {
       const detail = this.path.endsWith('detailed-balance');
 
       setChildren(this.section, <AccountInfo account={data.id} detail={detail} />);
@@ -55,6 +81,16 @@ export default class Content {
     }
 
     switch (this.path) {
+      case '':
+        if (getCookie('auth')) {
+          router.navigate('/accounts');
+        };
+        setAttr(this.el, {
+          className: 'content content-login'
+        });
+        unmount(this.el, this.menu);
+        setChildren(this.section, <Login />);
+        break;
       case 'accounts':
         setAttr(this.el, {
           className: 'content'
@@ -67,20 +103,10 @@ export default class Content {
         this.menu.update(this.path)
         setChildren(this.section, <Currencies />);
         break;
-        case 'banks':
+      case 'banks':
         mount(this.el, this.menu, this.section);
         this.menu.update(this.path)
         setChildren(this.section, <Banks />);
-        break;
-      case '':
-        if (getCookie('auth')) {
-          router.navigate('/accounts');
-        };
-        setAttr(this.el, {
-          className: 'content content-login'
-        });
-        unmount(this.el, this.menu);
-        setChildren(this.section, <Login />);
         break;
     };
   };

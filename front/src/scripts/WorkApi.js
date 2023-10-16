@@ -1,4 +1,4 @@
-import getCookie from "../scripts/getCookie";
+import getCookie from "./getCookie";
 
 export default class WorkApi {
   constructor() { }

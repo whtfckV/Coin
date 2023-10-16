@@ -1,4 +1,55 @@
 .form-transfer {
+  $padX: 50px;
+  $padY: 25px;
+  $gapX: 18px;
+  $gapY: 25px;
+  $lhLegend: 25px;
+  $lhLabel: 20px;
+  $wLabel: 200px;
+  $hInput: 44px;
+  $wInput: 276px;
+  $hBtn: 52px;
+  $wBtn: 166px;
+
+
+  &.skeleton {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-repeat: no-repeat;
+      background-image:
+        linear-gradient(var(--color-grey5) $lhLegend, transparent 0),
+        linear-gradient(var(--color-grey5) $lhLabel, transparent 0),
+        linear-gradient(var(--color-grey5) $lhLabel, transparent 0),
+        linear-gradient(var(--color-grey5) $hInput, transparent 0),
+        linear-gradient(var(--color-grey5) $hInput, transparent 0),
+        linear-gradient(var(--color-grey5) $hBtn, transparent 0),
+      ;
+      background-size:
+        160px $lhLegend,
+        $wLabel $lhLabel,
+        $wLabel $lhLabel,
+        $wInput $hInput,
+        $wInput $hInput,
+        $wBtn $hBtn,
+      ;
+      background-position:
+        $padX $padY,
+        $padX calc($padY + $lhLegend + $gapY + 10px),
+        $padX calc($padY + $lhLegend + $hInput + $gapY * 2 + 10px),
+        calc($padX + $wLabel + $gapX - 1px) calc($padY + $lhLegend + $gapY - 2px ),
+        calc($padX + $wLabel + $gapX - 1px) calc($padY + $lhLegend + $hInput + $gapY * 2 - 2px),
+        calc($padX + $wLabel + $gapX - 1px) calc($padY + $lhLegend + $hInput * 2 + $gapY * 3 - 2px),
+      ;
+    }
+
+    @include animateSkeleton()
+  }
+
   &__field {
     padding: 0;
     border: none;

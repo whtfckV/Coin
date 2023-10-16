@@ -1,6 +1,7 @@
 import Navigo from 'navigo';
 import { nav } from '../modules/Header';
 import { content } from '../modules/App';
+import { setChildren } from 'redom';
 
 
 const changeRout = ({ url, data }) => {
@@ -18,9 +19,12 @@ router.hooks({
 router.on({
   '/': changeRout,
   '/accounts': changeRout,
-  '/account/:id': changeRout,
-  '/account/:id/detailed-balance': changeRout,
+  '/accounts/:id': changeRout,
+  '/accounts/:id/detailed-balance': changeRout,
   '/currencies': changeRout,
   'banks': changeRout,
+  'notFound': changeRout,
 });
+
+// router.notFound(() => );
 export default router;

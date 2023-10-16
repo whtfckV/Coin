@@ -18,7 +18,7 @@ transactions: [
 
 export default class Card {
   constructor({ card: { account, balance, transactions } }) {
-    <li this='el' class='card card-list__item'>
+    <li this='el' class='card card-list__item' data-test='card'>
       <span class='card__amount'>{account}</span>
       <span class='card__balance'>{`${balance} ₽`}</span>
       <div class='card__content'>
@@ -28,7 +28,14 @@ export default class Card {
             <span class='card__last-transaction-date'>{transactions.map(createFormattedDate)}</span>
           </div>
         </div>
-        <a onclick={() => {router.navigate(`/account/${(account)}`)}} class='btn btn-l btn-primary card__btn'>Открыть</a>
+        <a
+          onclick={() => {
+            router.navigate(`/accounts/${(account)}`)
+          }}
+          class='btn btn-l btn-primary card__btn'
+          data-test={account === '74213041477477406320783754' ? 'sender' : ''}>
+          Открыть
+        </a>
       </div>
     </li>
   };

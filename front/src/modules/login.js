@@ -1,7 +1,8 @@
 import { el, setAttr } from "redom";
-import WorkApi from '../modules/WorkApi';
+import WorkApi from '../scripts/WorkApi';
 import router from '../router/router'
 import validLoginForm from "../scripts/validationLoginForm";
+import Toast from "../scripts/toast";
 
 export default class Login {
   constructor() {
@@ -10,15 +11,15 @@ export default class Login {
         <legend class='main-title login__leg'>Вход в аккаунт</legend>
         <div class='login__grp'>
           <label class='login_lbl' for='login'>Логин</label>
-          <input this='loginEl' name='login' id='login' class='inp login__inp' />
+          <input this='loginEl' name='login' id='login' data-test='login' class='inp login__inp' />
           <span this='loginErrorEl' class='error'></span>
         </div>
         <div class='login__grp'>
           <label class='login_lbl' for='password'>Пароль</label>
-          <input this='passwordEl' name='password' type='password' id='password' class='inp login__inp' />
+          <input this='passwordEl' name='password' type='password' id='password' data-test='password' class='inp login__inp' />
           <span this='passwordErrorEl' class='error'></span>
         </div>
-        <button this='btnSubmit' type='submit' class='btn btn-primary btn-s login__btn'>Войти</button>
+        <button this='btnSubmit' type='submit' data-test='submit' class='btn btn-primary btn-s login__btn'>Войти</button>
       </fieldest>
     </form>
   };
@@ -39,7 +40,7 @@ export default class Login {
     };
   };
 
-  submit = e => {
+  submit = async e => {
     e.preventDefault();
     this.loginErrorEl.textContent = '';
     this.passwordErrorEl.textContent = '';
@@ -56,28 +57,42 @@ export default class Login {
         disabled: true
       });
 
-      WorkApi.autorization(login, password).then(({ payload, error }) => {
-        try {
-          if (error) throw new Error(error);
+      try {
+        const { payload, error } = await WorkApi.autorization(login, password);
 
-          const date = new Date(Date.now() + 86400e3);
-          document.cookie = `auth=${payload.token}; expires=${date}`;
-          router.navigate('/accounts');
-        } catch ({ message }) {
-          switch (message) {
-            case 'No such user':
-              this.error('log', 'Нет такого пользователя');
-              break;
-            case 'Invalid password':
-              this.error('pas', 'Неправильный пароль');
-              break;
-          }
-        } finally {
-          setAttr(this.btnSubmit, {
-            disabled: false
-          });
+        if (error) {
+          throw new Error(error)
         };
-      });
+
+        const date = new Date(Date.now() + 86400e3);
+        document.cookie = `auth=${payload.token}; expires=${date}`;
+        router.navigate('/accounts');
+
+      } catch ({ message }) {
+        switch (message) {
+          case 'No such user':
+            this.error('log', 'Нет такого пользователя');
+            break;
+          case 'Invalid password':
+            this.error('pas', 'Неправильный пароль');
+            break;
+          case 'Failed to fetch':
+            new Toast({
+              title: 'Упс, что-то пошло не так',
+              text: 'Не удалось получить ответ от сервера',
+              theme: 'danger',
+              autohide: true,
+              interval: 10000,
+            });
+            break;
+          default:
+            throw new Error(message);
+        };
+      } finally {
+        setAttr(this.btnSubmit, {
+          disabled: false
+        });
+      };
     };
   };
 };

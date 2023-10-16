@@ -1,11 +1,12 @@
 import { el, setAttr } from "redom";
-import WorkApi from "./WorkApi";
+import WorkApi from "../scripts/WorkApi";
 import ExchangeSelect from "./ExchangeSelect";
+import Toast from "../scripts/toast";
 
 export default class Exchange {
   constructor({ update }) {
     this.updateCurrencies = update;
-    this.baseClassesForm = 'currencies__block currencies__exchange exchange';
+    this.baseClassesForm = 'currencies__block bg-white currencies__exchange exchange';
     this.baseClassesSubmitter = 'btn btn-primary btn-l exchange__submit';
     <div this='el' class={this.baseClassesForm}>
       <form class='exchange__form' onsubmit={this.submit.bind(this)}>
@@ -40,14 +41,9 @@ export default class Exchange {
 
   set load(bool) {
     this._load = bool;
-
-    this._load ?
-      setAttr(this.el, {
-        className: `${this.baseClassesForm} skeleton`
-      }) :
-      setAttr(this.el, {
-        className: this.baseClassesForm
-      });
+    setAttr(this.el, {
+      className: `${this.baseClassesForm} ${this._load ? 'skeleton' : ''}`
+    })
   };
 
   get load() {
@@ -82,11 +78,24 @@ export default class Exchange {
       if (error) {
         throw new Error(error);
       };
+
       this.data = payload;
       this.update();
-    } catch (error) {
-      console.log(error);
-      throw new Error(error)
+
+    } catch ({ message }) {
+      switch (message) {
+        case 'Failed to fetch':
+          new Toast({
+            title: 'Упс, что-то пошло не так',
+            text: 'Не удалось получить ответ от сервера',
+            theme: 'danger',
+            autohide: true,
+            interval: 10000,
+          });
+          break;
+        default:
+          throw new Error(error)
+      }
     } finally {
       this.load = false;
     };
@@ -112,9 +121,17 @@ export default class Exchange {
       case 'Overdraft prevented':
         this.otherError.textContent = 'Недостаточно средств'
         break;
+      case 'Failed to fetch':
+        new Toast({
+          title: 'Упс, что-то пошло не так',
+          text: 'Не удалось получить ответ от сервера',
+          theme: 'danger',
+          autohide: true,
+          interval: 10000,
+        });
+        break;
       default:
         throw new Error(error);
-        break;
     }
   };
 
@@ -158,8 +175,8 @@ export default class Exchange {
       this.updateCurrencies(payload);
       this.amount.value = '';
 
-    } catch (error) {
-      this.error(error.message)
+    } catch ({ message }) {
+      this.error(message)
     } finally {
       this.submiting = false;
     };

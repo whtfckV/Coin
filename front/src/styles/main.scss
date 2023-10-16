@@ -14,6 +14,7 @@
 @import 'history.scss';
 @import 'bar-chart.scss';
 @import 'banks.scss';
+@import 'toast.scss';
 
 html {
   box-sizing: border-box;
@@ -112,5 +113,3 @@ button {
   background-color: var(--color-white);
   box-shadow: var(--shadow);
 }
-
-

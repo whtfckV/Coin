@@ -1,4 +1,4 @@
-import WorkApi from "./WorkApi";
+import WorkApi from "../scripts/WorkApi";
 import { el, mount, setAttr } from "redom";
 
 export default class Strim {
@@ -9,7 +9,8 @@ export default class Strim {
       '0': 'no-change',
       '-1': 'down',
     };
-    <div this='el' class='currencies__block currencies__block_grey currencies__strim'>
+    this.defaultClasses = 'currencies__block  bg-grey currencies__strim';
+    <div this='el' class={this.defaultClasses}>
       <h2 class='currencies__title'>Изменение курсов в реальном времени</h2>
       <ul this='list' class='currency__list list-reset'></ul>
     </div>
@@ -23,15 +24,28 @@ export default class Strim {
     this.socket.close();
   };
 
+  set load(bool) {
+    this._load = bool;
+    setAttr(this.el, {
+      className: `${this.defaultClasses} ${this.load ? 'skeleton' : ''}`
+    });
+  };
+
+  get load() {
+    return this._load;
+  };
+
   async connect() {
     this.load = true;
     try {
       this.socket = await WorkApi.getChangedCurrency();
+
       this.socket.addEventListener('message', e => {
         this.renderCurrecy(JSON.parse(e.data));
       });
+
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       this.load = false;
     };

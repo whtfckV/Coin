@@ -14,20 +14,66 @@
   }
 
   &__block {
-    border-radius: 50px;
     padding: $pad;
-    background-color: var(--color-white);
-    box-shadow: var(--shadow);
-
-
-    &_grey {
-      background-color: #e5e5e5;
-      box-shadow: none;
-    }
   }
 
   &__strim {
     grid-row: span 2;
+
+    &.skeleton {
+      $height: 23px;
+      $gap: 25px;
+      $width: calc(100% - $pad * 2);
+      $offset: calc($height + $gap);
+      height: 700px;
+
+      background-color: var(--color-grey7);
+      background-repeat: no-repeat;
+      background-image:
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0);
+      background-size:
+        350px $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height,
+        $width $height;
+      background-position:
+        $pad $pad,
+        $pad calc($pad + $offset * 1),
+        $pad calc($pad + $offset * 2),
+        $pad calc($pad + $offset * 3),
+        $pad calc($pad + $offset * 4),
+        $pad calc($pad + $offset * 5),
+        $pad calc($pad + $offset * 6),
+        $pad calc($pad + $offset * 7),
+        $pad calc($pad + $offset * 8),
+        $pad calc($pad + $offset * 9),
+        $pad calc($pad + $offset * 10),
+        $pad calc($pad + $offset * 11),
+        $pad calc($pad + $offset * 12);
+
+      @include animateSkeleton();
+    }
   }
 
   .your {
@@ -38,8 +84,8 @@
       $width: calc(100% - $pad * 2);
       $offset: calc($height + $gap);
       height: 411px;
-      @include animateSkeleton();
 
+      background-color: var(--color-grey7);
       background-repeat: no-repeat;
       background-image:
         linear-gradient(var(--color-grey5) $height, transparent 0),
@@ -66,6 +112,9 @@
         $pad calc($pad + $offset * 4),
         $pad calc($pad + $offset * 5),
         $pad calc($pad + $offset * 6);
+
+      @include animateSkeleton();
     }
+
   }
 }

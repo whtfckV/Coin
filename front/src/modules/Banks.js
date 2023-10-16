@@ -1,14 +1,18 @@
-import { el } from 'redom';
-import WorkApi from './WorkApi';
+import { el, setAttr } from 'redom';
+import WorkApi from '../scripts/WorkApi';
 
 export default class Banks {
   constructor() {
-    <div this='el' class='banks' id='map'>
+    this.deafultClasses = 'banks';
+    <div this='el' class={this.deafultClasses} id='map'>
     </div>
   };
 
   set load(bool) {
     this._load = bool;
+    setAttr(this.el, {
+      className: `${this.deafultClasses} ${this.load ? 'skeleton' : ''}`
+    });
   };
 
   get load() {
@@ -27,12 +31,26 @@ export default class Banks {
       if (error) {
         throw new Error(error);
       };
+
       this.data = payload;
       ymaps.ready(this.init.bind(this));
-    } catch (error) {
-      throw new Error(error);
+
+    } catch ({ message }) {
+      switch (message) {
+        case 'Failed to fetch':
+          new Toast({
+            title: 'Упс, что-то пошло не так',
+            text: 'Не удалось получить ответ от сервера',
+            theme: 'danger',
+            autohide: true,
+            interval: 10000,
+          });
+          break;
+        default:
+          throw new Error(error)
+      }
     } finally {
-      this.load = false;
+      // this.load = false;
     };
   };
 

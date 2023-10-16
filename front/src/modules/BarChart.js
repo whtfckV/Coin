@@ -27,6 +27,7 @@ export default class BarChart {
     this.aspectRatio = 6.5;
     this.stacked = false;
     this.maxTicksLimit = 3;
+    this.defaultClasses = 'account__bar-chart bar-chart bg-white';
     this.scales = {
       x: {
         border: {
@@ -61,25 +62,30 @@ export default class BarChart {
     };
     <button
       this='el'
-      class='account__bar-chart bar-chart bg-white'
+      class={this.defaultClasses}
       onclick={() => {
         this.detailedBalance?.();
       }}
     >
-      <h3 this='subtitle' class='subtitle'>{this.title}</h3>
+      <h3 this='subtitle' class='subtitle'></h3>
       <canvas this='canvas'></canvas>
     </button >
   };
 
-  set title(titleName) {
-    this._title = titleName;
-    setAttr(this.subtitle, {
-      textContent: titleName,
+  set load(bool) {
+    this._load = bool;
+    setAttr(this.el, {
+      className: `${this.defaultClasses} ${this.load ? 'skeleton' : ''}`,
     });
+    if (!this.load) {
+      setAttr(this.subtitle, {
+        textContent: this.title,
+      });
+    };
   };
 
-  get title() {
-    return this._title;
+  get load() {
+    return this._load;
   };
 
   set balance(amount) {

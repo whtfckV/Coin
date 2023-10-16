@@ -1,4 +1,108 @@
 .history {
+
+  &.skeleton {
+    height: 350px;
+    display: flex;
+
+    &::after {
+      $padX: 50px;
+      $padY: calc($padX / 2);
+      $padTable: 49px;
+      $padTableY: 20px;
+      $hCaption: 23px;
+      $hTrans: 23px;
+      $marCaption: 25px;
+      $wNumber: 240px;
+      $wSum: 90px;
+      $wDate: 90px;
+      $gapX: 45px;
+
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-repeat: no-repeat;
+      background-image:
+        linear-gradient(var(--color-grey5) $hCaption, transparent 0),
+        linear-gradient(var(--color-grey5) $hCaption, transparent 0),
+        linear-gradient(var(--color-grey5) $hCaption, transparent 0),
+        linear-gradient(var(--color-grey5) $hCaption, transparent 0),
+
+        linear-gradient(var(--color-grey5) $hCaption, transparent 0),
+        linear-gradient(var(--color-grey5) $hTrans, transparent 0),
+        linear-gradient(var(--color-grey5) $hTrans, transparent 0),
+        linear-gradient(var(--color-grey5) $hTrans, transparent 0),
+        linear-gradient(var(--color-grey5) $hTrans, transparent 0),
+        linear-gradient(var(--color-grey5) $hCaption, transparent 0),
+        linear-gradient(var(--color-grey5) $hTrans, transparent 0),
+        linear-gradient(var(--color-grey5) $hTrans, transparent 0),
+        linear-gradient(var(--color-grey5) $hTrans, transparent 0),
+        linear-gradient(var(--color-grey5) $hTrans, transparent 0),
+        linear-gradient(var(--color-grey5) $hCaption, transparent 0),
+        linear-gradient(var(--color-grey5) $hTrans, transparent 0),
+        linear-gradient(var(--color-grey5) $hTrans, transparent 0),
+        linear-gradient(var(--color-grey5) $hTrans, transparent 0),
+        linear-gradient(var(--color-grey5) $hTrans, transparent 0),
+        // linear-gradient(var(--color-grey5) $lhTrans, transparent 0),
+        // linear-gradient(var(--color-grey5) $lhTrans, transparent 0),
+        // linear-gradient(var(--color-grey5) 48px, transparent 0)
+      ;
+      background-size:
+        270px $hCaption,
+        190px $hCaption,
+        160px $hCaption,
+        90px $hCaption,
+        75px $hCaption,
+
+        $wNumber $hTrans,
+        $wNumber $hTrans,
+        $wSum $hTrans,
+        $wDate $hTrans,
+        $wNumber $hTrans,
+        $wNumber $hTrans,
+        $wSum $hTrans,
+        $wDate $hTrans,
+        $wNumber $hTrans,
+        $wNumber $hTrans,
+        $wSum $hTrans,
+        $wDate $hTrans,
+        // 151px $lhTrans,
+        // 98px $lhTrans,
+        // 111px 48px
+      ;
+      background-position:
+        $padX $padY,
+        calc($padX + $padTable) calc($padY + $hCaption + $marCaption + $padTableY),
+        calc($padX + $padTable + 300px) calc($padY + $hCaption + $marCaption + $padTableY),
+        calc($padX + $padTable + 580px) calc($padY + $hCaption + $marCaption + $padTableY),
+        calc($padX + $padTable + 710px) calc($padY + $hCaption + $marCaption + $padTableY),
+
+        calc($padX + $padTable) calc($padY + $hCaption + $marCaption + $padTableY + 61px),
+        calc($padX + $padTable + $wNumber + $gapX) calc($padY + $hCaption + $marCaption + $padTableY + 61px),
+        calc($padX + $padTable + ($wNumber + $gapX) * 2) calc($padY + $hCaption + $marCaption + $padTableY + 61px),
+        calc($padX + $padTable + ($wNumber + $gapX) * 2 + $wSum + $gapX) calc($padY + $hCaption + $marCaption + $padTableY + 61px),
+        calc($padX + $padTable) calc($padY + $hCaption + $marCaption + $padTableY + 61px * 2),
+        calc($padX + $padTable + $wNumber + $gapX) calc($padY + $hCaption + $marCaption + $padTableY + 61px * 2),
+        calc($padX + $padTable + ($wNumber + $gapX) * 2) calc($padY + $hCaption + $marCaption + $padTableY + 61px * 2),
+        calc($padX + $padTable + ($wNumber + $gapX) * 2 + $wSum + $gapX) calc($padY + $hCaption + $marCaption + $padTableY + 61px * 2),
+        calc($padX + $padTable) calc($padY + $hCaption + $marCaption + $padTableY + 61px * 3),
+        calc($padX + $padTable + $wNumber + $gapX) calc($padY + $hCaption + $marCaption + $padTableY + 61px * 3),
+        calc($padX + $padTable + ($wNumber + $gapX) * 2) calc($padY + $hCaption + $marCaption + $padTableY + 61px * 3),
+        calc($padX + $padTable + ($wNumber + $gapX) * 2 + $wSum + $gapX) calc($padY + $hCaption + $marCaption + $padTableY + 61px * 3),
+        // $pad calc(100% - $pad - $lhTrans - 2px),
+        // $pad calc(100% - $pad),
+        // calc(100% - $pad) calc(100% - $pad)
+      ;
+    }
+
+    & .history-table__head th {
+      background-color: var(--color-grey7)
+    }
+
+    @include animateSkeleton();
+  }
+
+
+
   &__table {
     width: 100%;
     font-family: var(--font-ubuntu);
@@ -12,6 +116,7 @@
 .history-table {
   border: none;
   border-collapse: collapse;
+
 
   &__head th {
     padding: 20px 10px;
@@ -60,11 +165,11 @@
         }
 
         &.outgoing {
-          color: var(--color-success);
+          color: var(--color-second4);
         }
 
         &.incoming {
-          color: var(--color-second4);
+          color: var(--color-success);
         }
       }
     }

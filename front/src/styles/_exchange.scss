@@ -57,23 +57,30 @@
     $pad: 50px;
     $lh: 23px;
     height: 256px;
-    @include animateSkeleton();
+    background-color: var(--color-grey7);
 
-    background-repeat: no-repeat;
-    background-image:
-      linear-gradient(var(--color-grey5) $lh, transparent 0),
-      linear-gradient(var(--color-grey5) $height, transparent 0),
-      linear-gradient(var(--color-grey5) $height, transparent 0),
-      linear-gradient(var(--color-grey5) calc(100%), transparent 0);
-    background-size:
-      165px $lh,
-      calc(78% - $pad * 2 - $gap) $height,
-      calc(78% - $pad * 2 - $gap) $height,
-      104px calc(100% - ($pad * 2 + $lh + $gap));
-    background-position:
-      $pad $pad,
-      $pad calc($pad + $lh + $gap),
-      $pad calc(100% - $pad),
-      calc(100% - $pad) calc(100% - $pad);
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-repeat: no-repeat;
+      background-image:
+        linear-gradient(var(--color-grey5) $lh, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) $height, transparent 0),
+        linear-gradient(var(--color-grey5) calc(100%), transparent 0);
+      background-size:
+        165px $lh,
+        calc(78% - $pad * 2 - $gap) $height,
+        calc(78% - $pad * 2 - $gap) $height,
+        104px calc(100% - ($pad * 2 + $lh + $gap));
+      background-position:
+        $pad $pad,
+        $pad calc($pad + $lh + $gap),
+        $pad calc(100% - $pad),
+        calc(100% - $pad) calc(100% - $pad);
+    }
+
+    @include animateSkeleton();
   }
 }

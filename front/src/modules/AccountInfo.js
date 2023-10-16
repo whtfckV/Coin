@@ -1,7 +1,7 @@
 import { el, mount, unmount } from "redom";
 import AccountTitle from "./AccountTitle";
 import AccountBalance from "./AccountBalance";
-import WorkApi from "./WorkApi";
+import WorkApi from "../scripts/WorkApi";
 import Transfer from "./Transfer";
 import History from "./History";
 import router from '../router/router';
@@ -27,6 +27,11 @@ export default class AccountInfo {
   set load(bool) {
     this._load = bool;
     this.balance.load = this.load;
+    this.barChartDynamics.load = this.load;
+    this.history.load = this.load;
+    if (!this.detail) {
+      this.transfer.load = this.load;
+    }
   };
 
   get load() {
@@ -39,7 +44,7 @@ export default class AccountInfo {
 
   // переход на к детальной информации счета
   goToDetail = () => {
-    router.navigate(`/account/${this.account}/detailed-balance`);
+    router.navigate(`/accounts/${this.account}/detailed-balance`);
   };
 
   update() {
@@ -66,17 +71,24 @@ export default class AccountInfo {
         throw new Error(error);
       };
 
-      // добавление данных в компаненты
+      // добавление данных в компоненты
       this.balance.data = balance;
       this.history.transactions = transactions;
       this.barChartDynamics.balance = balance;
       this.barChartDynamics.transactions = transactions;
+
       if (this.detail) {
         this.barChartRation.balance = balance;
         this.barChartRation.transactions = transactions;
       };
     } catch (error) {
-      console.error(error);
+      new Toast({
+        title: 'Упс, что-то пошло не так',
+        text: 'Не удалось получить ответ от сервера',
+        theme: 'danger',
+        autohide: true,
+        interval: 10000,
+      });
     } finally {
       this.load = false;
     };

@@ -18,8 +18,12 @@ export default class TopMenu {
       {topMenuiIcons.back}
       <span this='btnName'>Вернуться назад</span>
     </button>;
-    this.createBtn = <button onclick={create} this='btn' class='btn btn-primary btn-icon-text accounts-top__btn'>
-      {topMenuiIcons.create}
+    this.createBtn = <button
+      onclick={create}
+      this='btn'
+      class='btn btn-primary btn-icon-text accounts-top__btn'
+      data-test='create'
+    >{topMenuiIcons.create}
       <span this='btnName'>Создать новый счет</span>
     </button>;
     this.mySelect = <select id='sort' onchange={change}>

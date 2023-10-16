@@ -1,7 +1,8 @@
-import { el, mount, setAttr } from "redom";
+import { el, mount, setAttr, setChildren } from "redom";
 import { transferIcon } from "../scripts/Icons";
-import WorkApi from "./WorkApi";
+import WorkApi from "../scripts/WorkApi";
 import Dropdown from "./Dropdown";
+import Toast from "../scripts/toast";
 
 export default class Transfer {
   constructor({ account, updateInformation }) {
@@ -11,48 +12,68 @@ export default class Transfer {
     };
     this.account = account;
     this.updateInformation = updateInformation;
+    this.defaultClasses = 'account__form-transfer form-transfer bg-grey';
+    this.fieldset = <fieldset class='form-transfer__field'>
+      <legend class='form-transfer__name subtitle'>Новый перевод</legend>
+      <label class='form-transfer__lbl' for='recipient'>Номер счета получателя</label>
+      <div class='form-transfer__group'>
+        <input
+          this='recipient'
+          id='recipient'
+          class='inp form-transfer__inp'
+          data-test='recipient'
+          autocomplete='off'
+          onblur={this.handleBlur.bind(this)}
+          oninput={this.handleInputRecipient.bind(this)}
+          onfocus={this.handleFocus.bind(this)}
+        />
+        <span this='recipientError' data-name='recipient' class='form-transfer__error'></span>
+      </div>
+      <label class='form-transfer__lbl' for='amount'>Сумма перевода</label>
+      <div class='form-transfer__group'>
+        <input
+          this='amount'
+          id='amount'
+          class='inp form-transfer__inp'
+          data-test='amount'
+          type='number'
+          min='0'
+          step='0.01'
+          autocomplete='off'
+          oninput={this.handleInputAmount.bind(this)}
+          onkeypress={this.handleKeypress}
+        />
+        <span this='amountError' data-name='amount' class='form-transfer__error'></span>
+      </div>
+      <button
+        this='submitter'
+        class='btn btn-l btn-primary btn-icon-text form-transfer__btn'
+        data-test='transfer'
+        type='submit'>
+        {transferIcon}
+        <span>Отправить</span>
+      </button>
+    </fieldset>;
     <form
       this='el'
-      class='account__form-transfer form-transfer bg-grey'
+      class={this.defaultClasses}
       onsubmit={this.handleSubmit.bind(this)}
-    >
-      <fieldset class='form-transfer__field'>
-        <legend class='form-transfer__name subtitle'>Новый перевод</legend>
-        <label class='form-transfer__lbl' for='recipient'>Номер счета получателя</label>
-        <div class='form-transfer__group'>
-          <input
-            this='recipient'
-            id='recipient'
-            class='inp form-transfer__inp'
-            autocomplete='off'
-            onblur={this.handleBlur.bind(this)}
-            oninput={this.handleInputRecipient.bind(this)}
-            onfocus={this.handleFocus.bind(this)}
-          />
-          <span this='recipientError' data-name='recipient' class='form-transfer__error'></span>
-        </div>
-        <label class='form-transfer__lbl' for='amount'>Сумма перевода</label>
-        <div class='form-transfer__group'>
-          <input
-            this='amount'
-            id='amount'
-            class='inp form-transfer__inp'
-            type='number'
-            min='0'
-            step='0.01'
-            autocomplete='off'
-            oninput={this.handleInputAmount.bind(this)}
-            onkeypress={this.handleKeypress}
-          />
-          <span this='amountError' data-name='amount' class='form-transfer__error'></span>
-        </div>
-        <button this='submitter' class='btn btn-l btn-primary btn-icon-text form-transfer__btn' type='submit'>
-          {transferIcon}
-          <span>Отправить</span>
-        </button>
-      </fieldset>
-    </form >
+    ></form >
     this.oldAccountsList = <Dropdown handleClick={this.handleClick.bind(this)} target={this.recipient} />;
+  };
+
+  set load(bool) {
+    this._load = bool;
+    setAttr(this.el, {
+      className: `${this.defaultClasses} ${this.load ? 'skeleton' : ''}`
+    });
+    if (!this.load) {
+      setChildren(this.el, this.fieldset)
+    };
+  };
+
+  get load() {
+    return this._load;
   };
 
   set submitting(bool) {
@@ -85,7 +106,6 @@ export default class Transfer {
       if (error) {
         throw new Error(error);
       };
-
       this.updateInformation({
         balance: payload.balance,
         lastTransaction: payload.transactions[payload.transactions.length - 1],
@@ -115,6 +135,15 @@ export default class Transfer {
           break;
         case 'Overdraft prevented':
           this.setError(this.amountError, 'на счёте недостаточно средств')
+          break;
+        case 'Failed to fetch':
+          new Toast({
+            title: 'Упс, что-то пошло не так',
+            text: 'Не удалось получить ответ от сервера',
+            theme: 'danger',
+            autohide: true,
+            interval: 10000,
+          });
           break;
         default:
           throw new Error(error);

@@ -1,9 +1,10 @@
 import { el, setAttr, setChildren } from 'redom';
-import WorkApi from "./WorkApi";
+import WorkApi from "../scripts/WorkApi";
+import Toast from '../scripts/toast';
 
 export default class YourCurrencies {
   constructor() {
-    this.defaultClasses = 'currencies__block currencies__your your';
+    this.defaultClasses = 'currencies__block bg-white currencies__your your';
     <div this='el' class={this.defaultClasses}>
       <h3 class='currencies__title'>Ваши валюты</h3>
       <ul this='list' class='your__list'></ul>
@@ -17,13 +18,9 @@ export default class YourCurrencies {
   set load(bool) {
     this._load = bool;
 
-    this._load ?
-      setAttr(this.el, {
-        className: `${this.defaultClasses} skeleton`
-      }) :
-      setAttr(this.el, {
-        className: this.defaultClasses
-      });
+    setAttr(this.el, {
+      className: `${this.defaultClasses} ${this.load ? 'skeleton' : ''}`
+    })
   };
 
   get load() {
@@ -48,8 +45,20 @@ export default class YourCurrencies {
       };
       this.data = payload;
 
-    } catch (error) {
-      throw new Error(error);
+    } catch ({ message }) {
+      switch (message) {
+        case 'Failed to fetch':
+          new Toast({
+            title: 'Упс, что-то пошло не так',
+            text: 'Не удалось получить ответ от сервера',
+            theme: 'danger',
+            autohide: true,
+            interval: 10000,
+          });
+          break;
+        default:
+          throw new Error(error);
+      }
     } finally {
       this.load = false;
     };

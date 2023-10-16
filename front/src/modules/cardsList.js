@@ -1,12 +1,13 @@
 import { setChildren, el } from 'redom';
 import Card from './Card'
-import WorkApi from './WorkApi';
+import WorkApi from '../scripts/WorkApi';
+import Toast from '../scripts/toast';
 
 export default class CardList {
   constructor() {
-    <ul this='el' class='list-reset card-list'></ul>
     this.load;
     this.sortProp = localStorage.getItem('sorting');
+    <ul this='el' class='list-reset card-list'></ul>
   };
 
   set data(prop) {
@@ -64,10 +65,30 @@ export default class CardList {
         throw new Error(error);
       };
       this.data = payload;
-    } catch (error) {
-      throw new Error(error);
+    } catch ({ message }) {
+      // setChildren(this.el, [])
+      switch (message) {
+        case 'Failed to fetch':
+          new Toast({
+            title: 'Упс, что-то пошло не так',
+            text: 'Не удалось получить ответ от сервера',
+            theme: 'danger',
+            autohide: true,
+            interval: 10000,
+          });
+          break;
+        default:
+          new Toast({
+            title: 'Ошибка',
+            text: 'Произошла ошибка, попробуйте обновить страницу позже',
+            theme: 'danger',
+            autohide: true,
+            interval: 10000,
+          });
+          break;
+      };
     } finally {
-      this.load = false;
+      // this.load = false;
     };
   };
 
