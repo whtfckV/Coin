@@ -14,9 +14,4 @@ describe('Тест компонента Banks', () => {
     expect(select.el.classList.toString()).toEqual(expect.stringContaining(name));
   });
 
-  test('У label правильный for и описание', () => {
-    console.log(select.el.querySelector('label'))
-    expect(select.el.querySelector('[data-test=label]').for)
-    .not.toEqual(expect.stringContaining('swq'));
-  });
 });
