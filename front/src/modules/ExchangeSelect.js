@@ -4,7 +4,12 @@ export default class ExchangeSelect {
   constructor({ name, descr }) {
     this.data;
     <div this='el' class={`exchange__selects_${name}`}>
-      <label class='exchange__label' for={name}>{descr}</label>
+      <label
+        class='exchange__label'
+        data-test='label'
+        for={name}>
+        {descr}
+      </label>
       <select
         this='select'
         id={name}

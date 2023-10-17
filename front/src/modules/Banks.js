@@ -19,12 +19,22 @@ export default class Banks {
     return this._load;
   };
 
+  set data(value) {
+    this._data = value;
+    localStorage.setItem('banks', JSON.stringify(this.data));
+    ymaps.ready(this.init.bind(this));
+  };
+
+  get data() {
+    return this._data;
+  };
+
   onmount() {
     this.fetch();
   };
 
   async fetch() {
-    this.load = true;
+    this.load = this.checkLocalStorage();
     try {
       const { payload, error } = await WorkApi.getBanksLocations();
 
@@ -33,7 +43,6 @@ export default class Banks {
       };
 
       this.data = payload;
-      ymaps.ready(this.init.bind(this));
 
     } catch ({ message }) {
       switch (message) {
@@ -52,6 +61,15 @@ export default class Banks {
     } finally {
       this.load = false;
     };
+  };
+
+  checkLocalStorage() {
+    const localData = JSON.parse(localStorage.getItem('banks'));
+    if (!localData) {
+      return true
+    };
+    this.data = localData;
+    return !this.data;
   };
 
   init() {

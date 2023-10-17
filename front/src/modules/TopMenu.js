@@ -14,7 +14,13 @@ export default class TopMenu {
   constructor({ create, change }) {
     this.defaultCustomSelectClass = 'custom-select-container';
     this.elDefaultClass = 'accounts-top';
-    this.backBtn = <button onclick={() => { history.back() }} this='btn' class='btn btn-primary btn-icon-text accounts-top__btn'>
+    this.backBtn = <button
+      this='btn'
+      class='btn btn-primary btn-icon-text accounts-top__btn'
+      data-test='back'
+      onclick={() => {
+        history.back();
+      }}>
       {topMenuiIcons.back}
       <span this='btnName'>Вернуться назад</span>
     </button>;

@@ -155,6 +155,7 @@ export default class Transfer {
 
   // Выпадение списка при фокусе
   handleFocus() {
+    console.log(this.oldAccountsList.list)
     if (this.oldAccountsList.list.length) {
       mount(document.getElementById('modal'), this.oldAccountsList);
     };

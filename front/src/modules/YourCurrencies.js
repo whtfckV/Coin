@@ -29,7 +29,8 @@ export default class YourCurrencies {
 
   set data(payload) {
     this._data = Object.values(payload).filter(({ amount }) => !!amount);
-    this.update();
+    this.render();
+    localStorage.setItem('currencies', JSON.stringify(this.data));
   };
 
   get data() {
@@ -37,7 +38,7 @@ export default class YourCurrencies {
   };
 
   async fetch() {
-    this.load = true;
+    this.load = this.checkLocalStorage();
     try {
       const { payload, error } = await WorkApi.getCurrencyAccounts();
       if (error) {
@@ -64,7 +65,16 @@ export default class YourCurrencies {
     };
   };
 
-  update() {
+  checkLocalStorage() {
+    const localData = JSON.parse(localStorage.getItem('currencies'));
+    if (!localData) {
+      return true
+    };
+    this.data = localData;
+    return !this.data;
+  }
+
+  render() {
     setChildren(this.list, [
       this.data.map(({ amount, code }) =>
         <li class='currency'>

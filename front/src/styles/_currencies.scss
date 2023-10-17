@@ -2,6 +2,7 @@
   $pad: 50px;
   display: grid;
   grid-template-columns: 45fr 55fr;
+  // grid-template-rows: 1fr 1fr;
   gap: 44px 49px;
   font-family: var(--font-work);
   font-size: 20px;
@@ -17,8 +18,17 @@
     padding: $pad;
   }
 
-  &__strim {
+  & .Block--isDraggable {
+    // display: flex;
+    height: 100%;
+  }
+
+  & [data-drag=container]:nth-child(2) {
     grid-row: span 2;
+  }
+
+  &__strim {
+    height: 100%;
 
     &.skeleton {
       $height: 23px;
@@ -27,50 +37,55 @@
       $offset: calc($height + $gap);
       height: 700px;
 
-      background-color: var(--color-grey7);
-      background-repeat: no-repeat;
-      background-image:
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0);
-      background-size:
-        350px $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height;
-      background-position:
-        $pad $pad,
-        $pad calc($pad + $offset * 1),
-        $pad calc($pad + $offset * 2),
-        $pad calc($pad + $offset * 3),
-        $pad calc($pad + $offset * 4),
-        $pad calc($pad + $offset * 5),
-        $pad calc($pad + $offset * 6),
-        $pad calc($pad + $offset * 7),
-        $pad calc($pad + $offset * 8),
-        $pad calc($pad + $offset * 9),
-        $pad calc($pad + $offset * 10),
-        $pad calc($pad + $offset * 11),
-        $pad calc($pad + $offset * 12);
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: var(--color-grey7);
+        background-repeat: no-repeat;
+        background-image:
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0);
+        background-size:
+          350px $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height;
+        background-position:
+          $pad $pad,
+          $pad calc($pad + $offset * 1),
+          $pad calc($pad + $offset * 2),
+          $pad calc($pad + $offset * 3),
+          $pad calc($pad + $offset * 4),
+          $pad calc($pad + $offset * 5),
+          $pad calc($pad + $offset * 6),
+          $pad calc($pad + $offset * 7),
+          $pad calc($pad + $offset * 8),
+          $pad calc($pad + $offset * 9),
+          $pad calc($pad + $offset * 10),
+          $pad calc($pad + $offset * 11),
+          $pad calc($pad + $offset * 12);
+      }
 
       @include animateSkeleton();
     }
@@ -85,33 +100,38 @@
       $offset: calc($height + $gap);
       height: 411px;
 
-      background-color: var(--color-grey7);
-      background-repeat: no-repeat;
-      background-image:
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0),
-        linear-gradient(var(--color-grey5) $height, transparent 0);
-      background-size:
-        165px $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height,
-        $width $height;
-      background-position:
-        $pad $pad,
-        $pad calc($pad + $offset * 1),
-        $pad calc($pad + $offset * 2),
-        $pad calc($pad + $offset * 3),
-        $pad calc($pad + $offset * 4),
-        $pad calc($pad + $offset * 5),
-        $pad calc($pad + $offset * 6);
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: var(--color-grey7);
+        background-repeat: no-repeat;
+        background-image:
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0),
+          linear-gradient(var(--color-grey5) $height, transparent 0);
+        background-size:
+          165px $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height,
+          $width $height;
+        background-position:
+          $pad $pad,
+          $pad calc($pad + $offset * 1),
+          $pad calc($pad + $offset * 2),
+          $pad calc($pad + $offset * 3),
+          $pad calc($pad + $offset * 4),
+          $pad calc($pad + $offset * 5),
+          $pad calc($pad + $offset * 6);
+      }
 
       @include animateSkeleton();
     }

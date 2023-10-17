@@ -3,7 +3,7 @@ import { el, setStyle, unmount, mount, setChildren } from 'redom';
 export default class Dropdown {
   constructor({ handleClick, target }) {
     this.container = document.getElementById('modal');
-    this.list = JSON.parse(localStorage.getItem('accounts')) ?? [];
+    this.list = JSON.parse(localStorage.getItem('oldAccounts')) ?? [];
     this.index = 0;
     this.target = target;
     this.handleClick = handleClick;
@@ -16,7 +16,7 @@ export default class Dropdown {
   // Обновление списка используемых ранее аккаунтов
   set list(accountsList) {
     this._list = accountsList;
-    localStorage.setItem('accounts', JSON.stringify(this.list));
+    localStorage.setItem('oldAccounts', JSON.stringify(this.list));
   };
 
   get list() {
@@ -24,12 +24,14 @@ export default class Dropdown {
   };
 
   onmount() {
-    // Сбор актуальное информации о списке
-    this.list = JSON.parse(localStorage.getItem('accounts')) ?? [];
+    // Сбор актуальной информации о списке
+    this.list = JSON.parse(localStorage.getItem('oldAccounts')) ?? [];
     this.accountsItems = this.list.map(this.createListElement.bind(this));
     this.filter('');
+
     // Закрытие по клику вне
     document.addEventListener('click', this.handleClickOut);
+
     // Размещение
     const { x, y, width, height } = this.target.getBoundingClientRect();
     setStyle(this.el, {

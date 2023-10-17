@@ -31,6 +31,8 @@ export default class AccountInfo {
     this.history.load = this.load;
     if (!this.detail) {
       this.transfer.load = this.load;
+    } else {
+      this.barChartRation.load = this.load;
     }
   };
 

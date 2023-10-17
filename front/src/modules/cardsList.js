@@ -14,6 +14,11 @@ export default class CardList {
     this._data = prop;
     this.sort();
     this.render();
+    localStorage.setItem('accounts', JSON.stringify(this.data));
+  };
+
+  get data() {
+    return this._data;
   };
 
   set sortProp(newSortProp) {
@@ -24,10 +29,6 @@ export default class CardList {
 
   get sortProp() {
     return this._sortProp;
-  };
-
-  get data() {
-    return this._data;
   };
 
   set load(bool) {
@@ -57,7 +58,7 @@ export default class CardList {
   };
 
   async fetch() {
-    this.load = true;
+    this.load = this.checkLocalStorage();
     try {
       const { payload, error } = await WorkApi.getAccounts();
 
@@ -66,7 +67,7 @@ export default class CardList {
       };
       this.data = payload;
     } catch ({ message }) {
-      // setChildren(this.el, [])
+      setChildren(this.el, [])
       switch (message) {
         case 'Failed to fetch':
           new Toast({
@@ -88,8 +89,17 @@ export default class CardList {
           break;
       };
     } finally {
-      // this.load = false;
+      this.load = false;
     };
+  };
+
+  checkLocalStorage() {
+    const localData = JSON.parse(localStorage.getItem('accounts'));
+    if (!localData) {
+      return true
+    };
+    this.data = localData;
+    return !this.data;
   };
 
   render() {
@@ -98,6 +108,7 @@ export default class CardList {
 
   sort() {
     if (!this.data) return;
+
     this.data.sort((cardA, cardB) => {
       if (this.sortProp !== 'date') {
         if (Number(cardA[this.sortProp]) < Number(cardB[this.sortProp]))

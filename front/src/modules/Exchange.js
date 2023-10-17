@@ -62,17 +62,22 @@ export default class Exchange {
     return this._submiting;
   };
 
+  set data(value) {
+    this._data = value;
+    this.render()
+    localStorage.setItem('knowCurrencies', JSON.stringify(this.data));
+  };
+
+  get data() {
+    return this._data;
+  };
+
   onmount() {
     this.fetch();
   };
 
-  update() {
-    this.from.update(this.data);
-    this.to.update(this.data);
-  };
-
   async fetch() {
-    this.load = true;
+    this.load = this.checkLocalStorage();
     try {
       const { payload, error } = await WorkApi.getKnownCurrencies();
       if (error) {
@@ -80,7 +85,6 @@ export default class Exchange {
       };
 
       this.data = payload;
-      this.update();
 
     } catch ({ message }) {
       switch (message) {
@@ -99,6 +103,22 @@ export default class Exchange {
     } finally {
       this.load = false;
     };
+  };
+
+  checkLocalStorage() {
+    const localData = JSON.parse(localStorage.getItem('knowCurrencies'));
+    if (!localData) {
+      return true
+    };
+    this.data = localData;
+    return !this.data;
+  };
+
+  render() {
+    if (!this.data) return;
+
+    this.from.update(this.data);
+    this.to.update(this.data);
   };
 
   error(error) {

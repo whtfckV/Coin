@@ -8,8 +8,10 @@ const hrefs = [
   ['', 'Выйти']
 ];
 
+const NOOP = () => { };
+
 const createLink = ([href, name]) =>
-  <a class='btn btn-l btn-outline' href={href} onclick={href ? () => { } : () => {
+  <a class='btn btn-l btn-outline' data-navigo href={href} onclick={href ? NOOP : () => {
     document.cookie = "auth=; max-age=-1"
     router.navigate('/');
   }}>{name}</a>;
