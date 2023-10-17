@@ -50,7 +50,7 @@ export default class Banks {
           throw new Error(error)
       }
     } finally {
-      // this.load = false;
+      this.load = false;
     };
   };
 

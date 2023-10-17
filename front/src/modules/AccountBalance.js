@@ -5,7 +5,7 @@ export default class AccountBalance {
     this.load;
     <div this='el' class='account__balance balance'>
       <strong class='account__mame'>Баланс</strong>
-      <span this='balance' class='balance__amount'></span>
+      <span this='balance' data-test='balance' class='balance__amount'></span>
     </div>
   };
 

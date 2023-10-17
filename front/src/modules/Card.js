@@ -19,7 +19,7 @@ transactions: [
 export default class Card {
   constructor({ card: { account, balance, transactions } }) {
     <li this='el' class='card card-list__item' data-test='card'>
-      <span class='card__amount'>{account}</span>
+      <span class='card__amount' data-test='account'>{account}</span>
       <span class='card__balance'>{`${balance} ₽`}</span>
       <div class='card__content'>
         <div class='card__content_left'>
