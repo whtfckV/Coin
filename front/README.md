@@ -14,7 +14,7 @@ npm run build
 npm test
 ```
 
-Запуск cepress для e2e тестов
+Запуск cypress для e2e тестов
 
 ```sh
 npx cypress open
