@@ -18,17 +18,8 @@
     padding: $pad;
   }
 
-  & .Block--isDraggable {
-    // display: flex;
-    height: 100%;
-  }
-
-  & [data-drag=container]:nth-child(2) {
-    grid-row: span 2;
-  }
-
   &__strim {
-    height: 100%;
+    grid-row: span 2;
 
     &.skeleton {
       $height: 23px;
